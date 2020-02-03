@@ -74,13 +74,12 @@ export default class InsightFacade implements IInsightFacade {
                                 if (!this.validSection(section)) {
                                     continue;
                                 } else {
-                                    let tempSection: CourseSection = this.makeCorseSection(section);
-                                    tempSectionArr.push(tempSection);
+                                    tempSectionArr.push(this.makeCorseSection(section));
                                 }
                             }
                         }
-                            // eslint-disable-next-line @typescript-eslint/tslint/config
-                        if ((tempSectionArr !== null) && (typeof tempSectionArr !== undefined) && (tempSectionArr.length === 0)) {
+                        if ((tempSectionArr !== null) && (typeof tempSectionArr !== undefined) &&
+                            (tempSectionArr.length === 0)) {
                             return reject(new InsightError("None valid section. Not a valid dataset"));
                             }
                         let myNewDataset = self.makeDataset(tempSectionArr, id, kind);
