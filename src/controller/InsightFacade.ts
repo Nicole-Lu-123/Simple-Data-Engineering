@@ -108,7 +108,13 @@ export default class InsightFacade implements IInsightFacade {
         if (this.existDatasetID(id) === false) {
             return Promise.reject(new NotFoundError());
         }
-        return Promise.reject("Not implemented.");
+        return new Promise((resolve, reject) => {
+            self.myDatasetMap.delete(id);
+            this.datasetIDs.splice(this.datasetIDs.indexOf(id));
+            let path = "./data/" + id + ".json";
+            fs.stat(path);
+            return resolve();
+        });
     }
 
     public performQuery(query: any): Promise <any[]> {
