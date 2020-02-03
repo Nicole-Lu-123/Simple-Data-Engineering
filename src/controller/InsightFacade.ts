@@ -48,13 +48,13 @@ export default class InsightFacade implements IInsightFacade {
         const coursesPromises: Array<Promise<string>> = [];
         let zip = new JSZip();
         // check the syntax of all input fields;
-        if (self.badDatasetID(id) || self.badContent(content) || self.badKind(kind)) {
+        if (self.badDatasetID(id) || self.badContent(content) || self.badKind(kind) || this.existDatasetID(id)) {
             return Promise.reject(new InsightError("Please check the ID, Content, or Kind! Potential invalid input."));
         }
-        // check the existence of the input id
-        if (this.existDatasetID(id)) {
-            return Promise.reject(new InsightError("The Dataset has already exist"));
-        }
+        // // check the existence of the input id
+        // if (this.existDatasetID(id)) {
+        //     return Promise.reject(new InsightError("The Dataset has already exist"));
+        // }
         // start to addDataset
         return new Promise((resolve, reject) => {
                 zip.loadAsync(content, {base64: true}).then(function (AllFiles) {
@@ -88,6 +88,7 @@ export default class InsightFacade implements IInsightFacade {
                         self.datasetsMap[id] = myNewDataset;
                         self.myDatasetMap.set(id, tempSectionArr);
                         fs.writeFileSync("./data/" + id + ".json", JSON.stringify(tempSectionArr));
+                        return resolve();
                         }
                         // parseAllValidSec (AllFiles, tempSectionArr, id, content, kind);
                     ).catch((error: any) => {
@@ -194,7 +195,9 @@ export default class InsightFacade implements IInsightFacade {
         return ((section.Subject !== undefined) && (section.Course !== undefined) && (section.Avg !== undefined) &&
             (section.Professor !== undefined) && (section.Title !== undefined) && (section.Pass !== undefined) &&
             (section.Fail !== undefined) && (section.Audit !== undefined) && (section.id !== undefined) &&
-            (section.Section !== undefined));
+            (section.Section !== undefined) && (typeof (section.Subject) === "string" ) &&
+            (typeof (section.Course) === "string") && (typeof (section.Avg) === "number") &&
+            (typeof (section.Professor) === "string") );
     }
     public  makeDataset ( tempSectionArr: CourseSection[], id: string, kind: InsightDatasetKind) {
         return  {
