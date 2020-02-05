@@ -1,16 +1,20 @@
 import Log from "../Util";
 import {IInsightFacade, InsightDataset, InsightDatasetKind} from "./IInsightFacade";
 import {InsightError, NotFoundError} from "./IInsightFacade";
-import * as JSZip from "jszip";
-import {auditLogger} from "restify";
+import {rejects} from "assert";
+import {isBoolean, isUndefined} from "util";
+import validate = WebAssembly.validate;
+import JSZip = require("jszip");
+import {JSZipObject} from "jszip";
 
 /**
  * This is the main programmatic entry point for the project.
  * Method documentation is in IInsightFacade
  *
  */
-const fs = require("fs");
-// CourseSection Object
+let validFile: boolean;
+let fs = require("fs");
+let numRows: number = 0;
 export interface CourseSection {
     courses_dept: string;
     courses_id: string;
@@ -23,99 +27,76 @@ export interface CourseSection {
     courses_uuid: string;
     courses_year: number;
 }
-
 export interface DatasetHashMap {
     [key: string]: InsightDataset;
 }
 
 export default class InsightFacade implements IInsightFacade {
-    public datasetIDs: string[];
-    public datasets: InsightDataset[];
-    public datasetsMap: DatasetHashMap;
-    public myDatasetMap: Map<string, CourseSection[]>;
-    // public filteredDatasets: CourseSection[];
+    // data Structures
+    public myDatasetMap: Map<string, CourseSection[]>;  // {("id", [CourseSectio1, CourseSectio2, CourseSectio3]); ...}
+    public dataSetsMap: Map<string, InsightDataset>; //  {("id", InsightDataset); ....}
+    public dataSetsIDs: string[];   // { "" ; ""; "" }
     constructor() {
-        let self = this;
-        self.datasetIDs = [];
-        self.datasets = [];
-        self.datasetsMap = {};
-        self.myDatasetMap = new Map<string, CourseSection[]>();
-        // self.filteredDatasets = [];
+        this.myDatasetMap = new Map<string, CourseSection[]>();
+        this.dataSetsMap = new Map<string, InsightDataset>();
+        this.dataSetsIDs = [];
         Log.trace("InsightFacadeImpl::init()");
+
     }
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
         let self = this;
-        const coursesPromises: Array<Promise<string>> = [];
-        let zip = new JSZip();
-        // check the syntax of all input fields;
-        if (self.badDatasetID(id) || self.badContent(content) || self.badKind(kind) || this.existDatasetID(id)) {
-            return Promise.reject(new InsightError("Please check the ID, Content, or Kind! Potential invalid input."));
-        }
-        // // check the existence of the input id
-        // if (this.existDatasetID(id)) {
-        //     return Promise.reject(new InsightError("The Dataset has already exist"));
-        // }
-        // start to addDataset
-        return new Promise((resolve, reject) => {
-                zip.loadAsync(content, {base64: true}).then(function (AllFiles) {
-                    AllFiles.folder("courses").forEach(function (relativePath, file) {
-                        // temperary section arrary
-                        // check if has sub-folder
-                        if (file.dir) {
-                            return reject(new InsightError("Not supposed to have a subFoler!"));
-                        }
-                        coursesPromises.push(file.async("text"));
-                    });
-                    let tempSectionArr: CourseSection[] = [];
-                    Promise.all(coursesPromises).then(function (FileCollection: any) {
-                        for (const course of FileCollection) {
-                            let sections = self.parseJson(course);
-                            for (const section of sections.result) {
-                                if (!this.validSection(section)) {
-                                    continue;
-                                } else {
-                                    tempSectionArr.push(this.makeCorseSection(section));
+        let finalSectionsArr: CourseSection[];
+        numRows = 0;
+        let promiseCoursesFiles: any[] = [];
+        return new Promise(function (resolve, reject) {
+            if (self.badDatasetID(id) || self.badContent(content) || self.dataSetsIDs.includes(id)) {
+                return reject(new InsightError("Invalid Input or existed dataset"));
+            } else {
+                try {
+                    let zip = new JSZip();
+                    // UNzip
+                    zip.loadAsync(content, {base64: true}).then( (AllFiles) => {
+                        AllFiles.forEach(function (relativePath: string, file) {
+                            validFile = this.validCoursesFile(relativePath, file);
+                            if (validFile) {
+                                let aNewCourse = file.async("text").then(function (CourseJasonData: string) {
+                                    let currCourseSectionArr: CourseSection[] = [];
+                                    currCourseSectionArr = self.makePreSavedSections(CourseJasonData);
+                                    if (CourseJasonData.length !== 0) {
+                                        finalSectionsArr = finalSectionsArr.concat(currCourseSectionArr);
+                                    }
+                                });
+                                promiseCoursesFiles.push(aNewCourse);
+                            }
+                        });
+                        Promise.all(promiseCoursesFiles).then(function () {
+                            try {
+                                if (finalSectionsArr.length === 0) {
+                                    return reject(new InsightError("no valid sections"));
                                 }
+                                self.dataSetsIDs.push(id);
+                                self.dataSetsMap.set(id, self.makeNewDataset(id, kind, finalSectionsArr.length));
+                                self.myDatasetMap.set(id, finalSectionsArr);
+                                let path = "./data/" + id + ".json";
+                                fs.writeFileSync(path, JSON.stringify(finalSectionsArr), "utf-8");
+                                resolve(self.dataSetsIDs);
+                            } catch (e) {
+                                return reject(new InsightError("promise all error"));
                             }
-                        }
-                        if ((tempSectionArr !== null) && (typeof tempSectionArr !== undefined) &&
-                            (tempSectionArr.length === 0)) {
-                            return reject(new InsightError("None valid section. Not a valid dataset"));
-                            }
-                        let myNewDataset = self.makeDataset(tempSectionArr, id, kind);
-                        self.datasetIDs.push(id);
-                        self.datasets.push(myNewDataset);
-                        self.datasetsMap[id] = myNewDataset;
-                        self.myDatasetMap.set(id, tempSectionArr);
-                        fs.writeFileSync("./data/" + id + ".json", JSON.stringify(tempSectionArr));
-                        return resolve();
-                        }
-                        // parseAllValidSec (AllFiles, tempSectionArr, id, content, kind);
-                    ).catch((error: any) => {
-                        return reject (new InsightError("???"));
+                        });
+                    }).catch(function (e) {
+                        return reject(new InsightError("unzip process failed!")); // catch unzip errors
                     });
-                }).catch((error: any) => {
-                   return reject (new InsightError("somethings worng"));
-                });
-        }
-        );
+                    //
+                } catch (err) {
+                    return reject(new InsightError("promise all error"));
+             }
+            }
+        });
     }
 
     public removeDataset(id: string): Promise<string> {
-        let self = this;
-        if (self.badDatasetID(id)) {
-            return Promise.reject("Please check the ID, Content, or Kind! Potential invalid input.");
-        }
-        if (this.existDatasetID(id) === false) {
-            return Promise.reject(new NotFoundError());
-        }
-        return new Promise((resolve, reject) => {
-            self.myDatasetMap.delete(id);
-            this.datasetIDs.splice(this.datasetIDs.indexOf(id));
-            let path = "./data/" + id + ".json";
-            fs.stat(path);
-            return resolve();
-        });
+        return Promise.reject("Not implemented.");
     }
 
     public performQuery(query: any): Promise <any[]> {
@@ -123,48 +104,76 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public listDatasets(): Promise<InsightDataset[]> {
-        let self = this;
-        return Promise.resolve(self.datasets);
+        return Promise.reject("Not implemented.");
     }
-    // Helper Functions
-    // AddDataset Input validity checking -1
-    public badDatasetID(id: string): boolean {
-        return (id.length === 0 || id === undefined || id === null || id.includes("_") || id.includes(" "));
+    // Helper functions
+    //
+    // 1 -check input DatasetID
+    public badDatasetID (id: string): boolean {
+        if (id === null || id === undefined || id === "" || id.includes("_") || id.includes(" ")) { // ??? type of
+            return true;    // return true if the id is null or undefined
+        } else {
+            return false;
+        }
     }
-    // AddDataset Input validity checking -2
+    // 2 -check input content
     public badContent(content: string): boolean {
         if (content === null || content === undefined) {
-            return true ;
+            return true;    // return true if the id is null or undefined
         } else {
             return false;
         }
     }
-    // AddDataset Input validity checking -3
-    public badKind(kind: InsightDatasetKind): boolean {
-        if (kind === null || kind === undefined) {
-            return true;
-        } else {
-            return false;
+    // 3 -check valid file under "courses" directory
+    //   use helper 4 /check true if no subfolder, false then has sub_folder
+    public validCoursesFile (relativePath: string, file: JSZipObject): boolean {
+        if ((relativePath.indexOf("courses/") === 0) && (relativePath.indexOf("courses/") !== -1) // "courses/" is root
+            && (file.dir === false)) {  // "the tail of this file  is not a folder"
+            if (this.countFolder(relativePath) === 1) {
+                return true;    // true if no subfolder,
+            } else {
+                return false;    // false then has sub_folder
+            }
         }
     }
-    // Check whehere the id has existed
-    public existDatasetID (id: string): boolean {
-        if (fs.existsSync("./data/" + id)) { // ??? includes right or not
-            return true;
-        } else {
-            return false;
-        }
+    // 4 - count folders(dir)
+    public  countFolder (relativePath: string): number {
+        let count: number = (relativePath.match(/[/]/g) || []).length;
+        return count;
     }
-    // Parse each course to a set of sectiosn
-    public  parseJson (course: any) {
-        let temparray: any;
+    // 5 - save the current jsonObj(file-course) to data structure.
+    public makePreSavedSections(CourseJasonData: string): CourseSection[] {
+        let currSections: CourseSection[] = [];
         try {
-            temparray = JSON.parse(course);
+            let unstoredParsedCourseData = JSON.parse(CourseJasonData);
+            let validunstoredParsedCourseData: boolean = unstoredParsedCourseData.result[0]; // ???
+            if (validunstoredParsedCourseData) {
+                for (let oneSection of unstoredParsedCourseData.result) {
+                    if (this.validSection(oneSection)) {
+                        currSections.push(this.makeCorseSection(oneSection));
+                        numRows ++;
+                    }
+                }
+            }
         } catch (e) {
-            return;
+            // error occurs when parsing jason
         }
-        return temparray;
+        return currSections;
     }
+    // 6 - check if the section is valid
+    public validSection(section: any) {
+        return ((typeof (section.Subject) !== "undefined") && (typeof (section.Course) !== "undefined") &&
+            (typeof (section.Avg) !== "undefined") && (typeof (section.Professor) !== "undefined")
+            && (typeof (section.Title) !== "undefined") && (typeof (section.Pass) !== "undefined")
+            && (typeof (section.Fail) !== "undefined") && (typeof (section.Audit)  !== "undefined")
+            && (typeof (section.id) !== "undefined") && (typeof (section.Year) !== "undefined"));
+            // && (typeof (section.Subject) === "string" ) && (typeof (section.Course) === "string")
+            // && (typeof (section.Avg) === "number") && (typeof (section.Professor) === "string")
+            // && (typeof (section.Title) === "string") && (typeof (section.Pass) === "number")
+            // && (typeof (section.Fail) === "number") && (typeof section.Audit === "number")
+            // && (typeof (section.id) === "number") && (typeof section.Section === "number"));
+    }
+    // 7 - make a new course section
     public makeCorseSection(section: any): CourseSection {
         let tempSection: CourseSection = {
             courses_dept: section.Subject,
@@ -176,34 +185,35 @@ export default class InsightFacade implements IInsightFacade {
             courses_fail: section.Fail,
             courses_audit: section.Audit,
             courses_uuid: this.setUUID(section.id),
-            courses_year: this.setYear(section.Section)
+            courses_year: section.Year.toNumber(),
         };
+        if (section.Section === "overall") {
+            tempSection. courses_year = 1990;
+        }
         return tempSection;
-
     }
-    public setUUID (id: string) {
+    // 8
+    public setUUID (id: any) {
         return id.toString();
     }
-    public setYear (section: any) {
-        if (section === "overall") {
-            return 1900;
-        } else {
-            return section;
-        }
-    }
-    public validSection(section: any) {
-        return ((section.Subject !== undefined) && (section.Course !== undefined) && (section.Avg !== undefined) &&
-            (section.Professor !== undefined) && (section.Title !== undefined) && (section.Pass !== undefined) &&
-            (section.Fail !== undefined) && (section.Audit !== undefined) && (section.id !== undefined) &&
-            (section.Section !== undefined) && (typeof (section.Subject) === "string" ) &&
-            (typeof (section.Course) === "string") && (typeof (section.Avg) === "number") &&
-            (typeof (section.Professor) === "string") );
-    }
-    public  makeDataset ( tempSectionArr: CourseSection[], id: string, kind: InsightDatasetKind) {
-        return  {
+    // 9 make new dataset
+    public  makeNewDataset (id: string, kind: InsightDatasetKind, length: number): InsightDataset {
+        let newDataset = {
             id : id,
-            kind: kind,
-            numRows: tempSectionArr.length,
+            kind : kind,
+            numRows : length,
         };
-    }
+        return newDataset;
+        }
+
+
+    // check input InsightDataset Kind // ??? check or not
+    // public badKind(kind: InsightDatasetKind): boolean {
+    //     if (kind === null || kind === undefined) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 }
+
