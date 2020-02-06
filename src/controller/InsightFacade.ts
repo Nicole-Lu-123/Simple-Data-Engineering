@@ -59,7 +59,7 @@ export default class InsightFacade implements IInsightFacade {
                         if (validFile === true) {
                             let aNewCourse = file.async("text").then(function (CourseJasonData: string) {
                                 let currCourseSectionArr: CourseSection[] = [];
-                                currCourseSectionArr = self.makePreSavedSections(CourseJasonData);
+                                currCourseSectionArr = self.makePreSavedSections(CourseJasonData, id);
                                 if (CourseJasonData.length !== 0) {
                                     finalSectionsArr = finalSectionsArr.concat(currCourseSectionArr);
                                 }
@@ -166,15 +166,15 @@ export default class InsightFacade implements IInsightFacade {
         return count;
     }
     // 5 - save the current jsonObj(file-course) to data structure.
-    public makePreSavedSections(CourseJasonData: string): CourseSection[] {
-        let currSections: CourseSection[] = [];
+    public makePreSavedSections(CourseJasonData: string, id: string): CourseSection[] {
+        let currSections: any[] = [];
         try {
             let unstoredParsedCourseData = JSON.parse(CourseJasonData);
             // let validunstoredParsedCourseData: object = unstoredParsedCourseData.result[0]; // ???
             if (unstoredParsedCourseData.result) {
                 for (let oneSection of unstoredParsedCourseData.result) {
                     if (this.validSection(oneSection)) {
-                        currSections.push(this.makeCorseSection(oneSection));
+                        currSections.push(this.makeCorseSection(oneSection, id));
                         numRows ++;
                     }
                 }
@@ -199,23 +199,38 @@ export default class InsightFacade implements IInsightFacade {
         // && (typeof (section.id) === "number") && (typeof section.Section === "number"));
     }
     // 7 - make a new course section
-    public makeCorseSection(section: any): CourseSection {
-        let tempSection: CourseSection = {
-            courses_dept: section.Subject,
-            courses_id: section.Course,
-            courses_avg: section.Avg,
-            courses_instructor: section.Professor,
-            courses_title: section.Title,
-            courses_pass: section.Pass,
-            courses_fail: section.Fail,
-            courses_audit: section.Audit,
-            courses_uuid: this.setUUID(section.id),
-            courses_year: Number(section.Year),
-        };
-        if (section.Section === "overall") {
-            tempSection. courses_year = 1990;
+    public makeCorseSection(section: any, id: string): CourseSection {
+        // let tempSection: CourseSection = {
+        //     courses_dept: section.Subject,
+        //     courses_id: section.Course,
+        //     courses_avg: section.Avg,
+        //     courses_instructor: section.Professor,
+        //     courses_title: section.Title,
+        //     courses_pass: section.Pass,
+        //     courses_fail: section.Fail,
+        //     courses_audit: section.Audit,
+        //     courses_uuid: this.setUUID(section.id),
+        //     courses_year: Number(section.Year),
+        // };
+        // if (section.Section === "overall") {
+        //     tempSection. courses_year = 1990;
+        // }
+        let courseObject: any = new Object();
+        courseObject[id + "_dept"] = section["Subject"];
+        courseObject[id + "_id"] = section["Course"];
+        courseObject[id + "_avg"] = section["Avg"];
+        courseObject[id + "_instructor"] = section["Professor"];
+        courseObject[id + "_title"] = section["Title"];
+        courseObject[id + "_pass"] = section["Pass"];
+        courseObject[id + "_fail"] = section["Fail"];
+        courseObject[id + "_audit"] = section["Audit"];
+        courseObject[id + "_uuid"] = section["id"].toString();
+        if (section["Section"] === "overall") {
+            courseObject[id + "_year"] = 1900;
+        } else {
+            courseObject[id + "_year"] = Number(section["Year"]);
         }
-        return tempSection;
+        return courseObject;
     }
     // 8
     public setUUID (id: any) {
