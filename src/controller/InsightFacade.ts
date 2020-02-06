@@ -108,6 +108,7 @@ export default class InsightFacade implements IInsightFacade {
                     self.dataSetsIDs.splice(self.dataSetsIDs.indexOf(id), 1);
                     let path = "./data/" + id + ".json";
                     fs.unlink(path, (err: any) => {
+                        Log.trace(err);
                         Log.trace("path is deleted");
                         return resolve (id);
                     });
@@ -171,16 +172,17 @@ export default class InsightFacade implements IInsightFacade {
         try {
             let unstoredParsedCourseData = JSON.parse(CourseJasonData);
             // let validunstoredParsedCourseData: object = unstoredParsedCourseData.result[0]; // ???
-            if (unstoredParsedCourseData.result) {
-                for (let oneSection of unstoredParsedCourseData.result) {
+            // if (unstoredParsedCourseData.result) {
+            for (let oneSection of unstoredParsedCourseData.result) {
                     if (this.validSection(oneSection)) {
                         currSections.push(this.makeCorseSection(oneSection, id));
                         numRows ++;
                     }
                 }
-            }
+            // }
         } catch (e) {
-            throw e;
+            Log.trace(e);
+            // throw e;
             // error occurs when parsing jason
         }
         return currSections;
@@ -225,10 +227,9 @@ export default class InsightFacade implements IInsightFacade {
         courseObject[id + "_fail"] = section["Fail"];
         courseObject[id + "_audit"] = section["Audit"];
         courseObject[id + "_uuid"] = section["id"].toString();
+        courseObject[id + "_year"] = Number(section["Year"]);
         if (section["Section"] === "overall") {
             courseObject[id + "_year"] = 1900;
-        } else {
-            courseObject[id + "_year"] = Number(section["Year"]);
         }
         return courseObject;
     }

@@ -122,7 +122,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
     });
     it("Should remove a valid dataset", function () {
         const id: string = "courses";
-        const expected: string[] = [];
+        const expected: string = "courses";
         return insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then((result1: string[]) => {
             return insightFacade.removeDataset(id);
         }).then((result: string) => {
@@ -280,8 +280,8 @@ describe("InsightFacade Add/Remove Dataset", function () {
         });
     });
     it("Should correctly list all", function () {
-        const id: string = "courses_allEmpty";
-        const expected: InsightDataset[] = [{id: "courses", kind: InsightDatasetKind.Courses, numRows: 0}];
+        const id: string = "courses";
+        const expected: InsightDataset[] = [{id: id, kind: InsightDatasetKind.Courses, numRows: 64612}];
         return insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then((result: string[]) => {
             return insightFacade.listDatasets();
         }).then((result: InsightDataset[]) => {
