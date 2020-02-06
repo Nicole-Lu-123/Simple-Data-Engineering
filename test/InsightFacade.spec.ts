@@ -21,7 +21,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
     // automatically be loaded in the 'before' hook.
     const datasetsToLoad: { [id: string]: string } = {
         courses: "./test/data/courses.zip",
-        courses_allEmpty: "./test/data/courses_allEmpty.zip",
+        coursesallEmpty: "./test/data/coursesallEmpty.zip",
         courses_allMiSSresult: "./test/data/courses_allMiSSresult.zip",
         courses_someInvalid: "./test/data/courses_someInvalid.zip",
         invalid_courses_all_invalidJason: "./test/data/invalid_courses_all_invalidJason.zip",
@@ -87,9 +87,10 @@ describe("InsightFacade Add/Remove Dataset", function () {
 
     });
     it("Should add courses_allEmptyfiles_folder", function () {
-        const id: string = "courses_allEmpty";
-        const expected: string[] = [id];
+        const id: string = "coursesallEmpty";
+        const expected: string[] = [];
         return insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then((result: string[]) => {
+            Log.trace(result);
             expect(result).to.deep.equal(expected);
         }).catch((err: any) => {
             expect.fail(err, expected, "Should not have rejected");
