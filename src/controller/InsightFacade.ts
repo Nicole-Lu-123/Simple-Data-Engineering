@@ -4,7 +4,6 @@ import {InsightError, NotFoundError} from "./IInsightFacade";
 import {rejects} from "assert";
 import * as JSZip from "jszip";
 import {JSZipObject} from "jszip";
-import {isBoolean, isUndefined} from "util";
 import validate = WebAssembly.validate;
 
 /**
@@ -52,53 +51,71 @@ export default class InsightFacade implements IInsightFacade {
             if (self.badDatasetID(id) || self.badContent(content) || self.dataSetsIDs.includes(id)) {
                 return reject(new InsightError("Invalid Input or existed dataset"));
             } else {
-                    zip.loadAsync(content, {base64: true}).then((AllFiles) => {
-                        AllFiles.forEach(function (relativePath: string, file: JSZipObject) {
-                            // check courses directory <-- helper 3 <--helper 4 no subfolder
-                            validFile = self.validCoursesFile(relativePath, file);
-                            // start to creat not promise(sigle course file) if is a valide file
-                            if (validFile === true) {
-                                let aNewCourse = file.async("text").then(function (CourseJasonData: string) {
-                                    let currCourseSectionArr: CourseSection[] = [];
-                                    currCourseSectionArr = self.makePreSavedSections(CourseJasonData);
-                                    if (CourseJasonData.length !== 0) {
-                                        finalSectionsArr = finalSectionsArr.concat(currCourseSectionArr);
-                                    }
-                                });
-                                promiseCoursesFiles.push(aNewCourse);
-                            }
+                zip.loadAsync(content, {base64: true}).then((AllFiles) => {
+                    AllFiles.forEach(function (relativePath: string, file: JSZipObject) {
+                        // check courses directory <-- helper 3 <--helper 4 no subfolder
+                        validFile = self.validCoursesFile(relativePath, file);
+                        // start to creat not promise(sigle course file) if is a valide file
+                        if (validFile === true) {
+                            let aNewCourse = file.async("text").then(function (CourseJasonData: string) {
+                                let currCourseSectionArr: CourseSection[] = [];
+                                currCourseSectionArr = self.makePreSavedSections(CourseJasonData);
+                                if (CourseJasonData.length !== 0) {
+                                    finalSectionsArr = finalSectionsArr.concat(currCourseSectionArr);
+                                }
+                            });
+                            promiseCoursesFiles.push(aNewCourse);
+                        }
 
-                        });
-                    }).catch(function (e) {
-                        return reject(new InsightError("unzip process failed!")); // catch unzip errors
-                    }).then(() => {
-                        Promise.all(promiseCoursesFiles).then(function () {
-                            try {
-                                if (finalSectionsArr.length === 0) {
-                                    return resolve(self.dataSetsIDs);
-                                }
-                                self.dataSetsIDs.push(id);
-                                self.dataSetsMap.set(id, self.makeNewDataset(id, kind, finalSectionsArr.length));
-                                self.myDatasetMap.set(id, finalSectionsArr);
-                                let path = "./data/" + id + ".json";
-                                if (!fs.existsSync("./data/")) {
-                                    fs.mkdirSync("./data/");
-                                }
-                                fs.writeFileSync(path, JSON.stringify(finalSectionsArr), "utf-8");
-                                return resolve(self.dataSetsIDs);
-                            } catch (e) {
-                                return reject(new InsightError("promise all error"));
-                            }
-                        });
                     });
-                    //
+                }).catch(function (e) {
+                    return reject(new InsightError("unzip process failed!")); // catch unzip errors
+                }).then(() => {
+                    Promise.all(promiseCoursesFiles).then(function () {
+                        try {
+                            if (finalSectionsArr.length === 0) {
+                                return reject(new InsightError());
+                            }
+                            self.dataSetsIDs.push(id);
+                            self.dataSetsMap.set(id, self.makeNewDataset(id, kind, finalSectionsArr.length));
+                            self.myDatasetMap.set(id, finalSectionsArr);
+                            let path = "./data/" + id + ".json";
+                            if (!fs.existsSync("./data/")) {
+                                fs.mkdirSync("./data/");
+                            }
+                            fs.writeFileSync(path, JSON.stringify(finalSectionsArr), "utf-8");
+                            return resolve(self.dataSetsIDs);
+                        } catch (e) {
+                            return reject(new InsightError("promise all error"));
+                        }
+                    });
+                });
+                //
 
-                }
+            }
         });
     }
 
     public removeDataset(id: string): Promise<string> {
-        return Promise.reject("Not implemented.");
+        let self = this;
+        return new Promise <string>(function (resolve, reject) {
+            if (self.badDatasetID(id)) {
+                return reject (new InsightError("invalid id"));
+            } else {
+                if (self.dataSetsIDs.includes(id)) {
+                    self.myDatasetMap.delete(id);
+                    self.dataSetsMap.delete(id);
+                    self.dataSetsIDs.splice(self.dataSetsIDs.indexOf(id), 1);
+                    let path = "./data/" + id + ".json";
+                    fs.unlink(path, (err: any) => {
+                        Log.trace("path is deleted");
+                        return resolve (id);
+                    });
+                } else {
+                    return reject(new NotFoundError("there is no such id"));
+                }
+            }
+        });
     }
 
     public performQuery(query: any): Promise <any[]> {
@@ -106,7 +123,12 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public listDatasets(): Promise<InsightDataset[]> {
-        return Promise.reject("Not implemented.");
+        let self = this;
+        let tempDatasats: InsightDataset[] = [];
+        return new Promise<InsightDataset[]>(function (resolve, reject) {
+            tempDatasats = Array.from( self.dataSetsMap.values());
+            return resolve (tempDatasats);
+        });
     }
     // Helper functions
     //
@@ -148,8 +170,8 @@ export default class InsightFacade implements IInsightFacade {
         let currSections: CourseSection[] = [];
         try {
             let unstoredParsedCourseData = JSON.parse(CourseJasonData);
-            let validunstoredParsedCourseData: object = unstoredParsedCourseData.result[0]; // ???
-            if (validunstoredParsedCourseData) {
+            // let validunstoredParsedCourseData: object = unstoredParsedCourseData.result[0]; // ???
+            if (unstoredParsedCourseData.result) {
                 for (let oneSection of unstoredParsedCourseData.result) {
                     if (this.validSection(oneSection)) {
                         currSections.push(this.makeCorseSection(oneSection));
@@ -219,4 +241,3 @@ export default class InsightFacade implements IInsightFacade {
     //     }
     // }
 }
-
