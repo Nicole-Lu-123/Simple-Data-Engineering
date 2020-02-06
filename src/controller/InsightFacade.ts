@@ -5,6 +5,7 @@ import {rejects} from "assert";
 import * as JSZip from "jszip";
 import {JSZipObject} from "jszip";
 import validate = WebAssembly.validate;
+import QueryBranch from "./QueryBranch";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -35,10 +36,12 @@ export default class InsightFacade implements IInsightFacade {
     public myDatasetMap: Map<string, CourseSection[]>;  // {("id", [CourseSectio1, CourseSectio2, CourseSectio3]); ...}
     public dataSetsMap: Map<string, InsightDataset>; //  {("id", InsightDataset); ....}
     public dataSetsIDs: string[];   // { "" ; ""; "" }
+    public querybranch: QueryBranch;
     constructor() {
         this.myDatasetMap = new Map<string, CourseSection[]>();
         this.dataSetsMap = new Map<string, InsightDataset>();
         this.dataSetsIDs = [];
+        this.querybranch = new QueryBranch();
         Log.trace("InsightFacadeImpl::init()");
 
     }
@@ -120,7 +123,17 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public performQuery(query: any): Promise <any[]> {
-        return Promise.reject("Not implemented.");
+        let id = QueryBranch.getstring(query);
+        if (this.dataSetsIDs.includes(id)) {
+            return this.querybranch.performQuery(query, this.myDatasetMap, id);
+        } else if (fs.existsSync("./data/" + id + ".json")) {
+            let contents = fs.readFileSync("./data/" + id + ".json");
+            let jsonContent = JSON.parse(contents);
+            this.myDatasetMap.set(id, jsonContent);
+            return this.querybranch.performQuery(query, this.myDatasetMap, id);
+        } else {
+            return  Promise.reject("Not Found error");
+        }
     }
 
     public listDatasets(): Promise<InsightDataset[]> {
