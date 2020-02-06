@@ -240,7 +240,7 @@ export default class InsightFacade implements IInsightFacade {
         courseObject[id + "_pass"] = section.Pass;
         courseObject[id + "_fail"] = section.Fail;
         courseObject[id + "_audit"] = section.Audit;
-        courseObject[id + "_uuid"] = section.id.toString();
+        courseObject[id + "_uuid"] = this.setUUID(section.id);
         courseObject[id + "_year"] = Number(section.Year);
         if (section["Section"] === "overall") {
             courseObject[id + "_year"] = 1900;
