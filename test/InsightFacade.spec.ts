@@ -1,10 +1,10 @@
 import {expect} from "chai";
 import * as fs from "fs-extra";
-import {InsightDataset, InsightDatasetKind, InsightError} from "../src/controller/IInsightFacade";
+import {InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from "../src/controller/IInsightFacade";
 import InsightFacade from "../src/controller/InsightFacade";
 import Log from "../src/Util";
 import TestUtil from "./TestUtil";
-import {NotFoundError} from "restify";
+
 
 // This should match the schema given to TestUtil.validate(..) in TestUtil.readTestQueries(..)
 // except 'filename' which is injected when the file is read.
@@ -105,18 +105,6 @@ describe("InsightFacade Add/Remove Dataset", function () {
             expect(result).to.deep.equal(expected);
         }).catch((err: any) => {
             expect.fail(err, expected, "Should not have rejected");
-        });
-
-    });
-    it("Should remove courses_someInvalid", function () {
-        const id: string = "courses_someInvalid";
-        const expected: string[] = [id];
-        return insightFacade.addDataset(id, datasets[id], InsightDatasetKind.Courses).then((result1: string[]) => {
-            return insightFacade.removeDataset(id);
-        }).then((result: string) => {
-            expect(result).to.deep.equal(expected);
-        }).catch((err: any) => {
-            expect.fail(err, expected, "Should be removed");
         });
 
     });
@@ -252,7 +240,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
         return insightFacade.removeDataset(id).then((result: string) => {
             expect.fail(result, null, "Should not remove");
         }).catch((err: any) => {
-            expect(err).to.be.instanceOf(NotFoundError);
+            expect(err).to.be.instanceOf(InsightError);
         });
     });
     it("Should  removecourses", function () {
