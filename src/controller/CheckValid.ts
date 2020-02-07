@@ -7,12 +7,15 @@ export default class CheckValid {
 
     // check valid body
     private checkValidBody(query: any, id: string): boolean {
-        if (Object.keys(query).length === 1 || Object.keys(query).length === 0) {
+        if (Object.keys(query).length === 1) {
             if (query.AND || query.OR || query.NOT || query.GT || query.EQ || query.LT || query.IS) {
                 return this.checkValidFilter(query, id);
             } else {
-                return true;
+                throw new InsightError("Invalid query! There is nothing in the filter");
             }
+        } else
+        if (Object.keys(query).length === 0) {
+            return true;
         } else {
             throw new InsightError("Invalid filter in Where!");
         }
@@ -20,7 +23,7 @@ export default class CheckValid {
 
     // check all filter: logiccomp,mcomp,scomp,negation and the keys:mkey,skey
     private checkValidFilter(query: any, id: string): boolean {
-        if (Object.keys(query).length === 0) {
+        if ( query == null || Object.keys(query).length === 0) {
             throw new InsightError("Invalid! At least one filter is null.");
         }
         if (query.AND) {
@@ -38,7 +41,7 @@ export default class CheckValid {
         if (query.NOT) {
             return this.checkValidFilter(query.NOT, id);
         } else {
-            throw new InsightError("Invalid query, filter in AND/OR/NOT is in wrong type");
+            throw new InsightError("Invalid query, filter in NOT is in wrong type");
         }
     }
     private IPstringcheck(ISquery: any): boolean {
@@ -48,14 +51,21 @@ export default class CheckValid {
             let value: string = ISquery[skey];
             let valuelen = value.length;
             if (value.includes(wild)) {
-                if (value.startsWith(wild) && value.endsWith(wild)) {
-                    let realvalue = value.substring(1, valuelen - 1);
-                    if (realvalue.includes(wild)) {
-                        throw new InsightError("Invalid query for using wildcard in a wrong way!");
-                    } else {
-                        return true;
-                    }
+                if (valuelen === 1) {
+                    return true;
                 }
+                if (value.startsWith(wild) && value.endsWith(wild)) {
+                    if (valuelen === 2) {
+                        return true;
+                    } else {
+                        let realvalue = value.substring(1, valuelen - 1);
+                        if (realvalue.includes(wild)) {
+                            throw new InsightError("Invalid query for using wildcard in a wrong way!");
+                        } else {
+                            return true;
+                        }
+                    }
+                } else
                 if (value.startsWith(wild)) {
                     let realvalue = value.substring(1, valuelen);
                     if (realvalue.includes(wild)) {
@@ -63,7 +73,7 @@ export default class CheckValid {
                     } else {
                         return true;
                     }
-                }
+                } else
                 if (value.endsWith(wild)) {
                     let realvalue = value.substring(0, valuelen - 1);
                     if (realvalue.includes(wild)) {
@@ -71,6 +81,8 @@ export default class CheckValid {
                     } else {
                         return true;
                     }
+                } else {
+                    throw new InsightError("Invalid query! The wildcard in the wrong position");
                 }
             } else {
                 return true;
@@ -81,8 +93,11 @@ export default class CheckValid {
 
     }
     private LCcheckEach(LClist: any[], id: string): boolean {
-        if (LClist.length >= 2) {
+        if (LClist.length >= 1) {
             for (let LC of LClist) {
+                if (Object.keys(LC).length !== 1) {
+                    throw new InsightError("Invalid query! The number of filters in object of AND are more than one ");
+                }
                 if (!this.checkValidFilter(LC, id)) {
                     return false;
                 }
@@ -101,7 +116,7 @@ export default class CheckValid {
                 }
                 let mkey: string = Object.keys(query.LT)[0];
                 let val = query.LT[mkey];
-                if (typeof val !== "number") {
+                if (val == null || typeof val !== "number") {
                     throw new InsightError("Invalid query! The value of mkey is not a number!");
                 } else {
                     return this.mKeycheck(mkey, id);
@@ -117,7 +132,7 @@ export default class CheckValid {
                 }
                 let mkey: string = Object.keys(query.GT)[0];
                 let val = query.GT[mkey];
-                if (typeof val !== "number") {
+                if (val == null || typeof val !== "number") {
                     throw new InsightError("Invalid query! The value of mkey is not a number!");
                 } else {
                     return this.mKeycheck(mkey, id);
@@ -133,7 +148,7 @@ export default class CheckValid {
                 }
                 let mkey: string = Object.keys(query.EQ)[0];
                 let val = query.EQ[mkey];
-                if (typeof val !== "number") {
+                if (val == null || typeof val !== "number") {
                     throw new InsightError("Invalid query! The value of mkey is not a number!");
                 } else {
                     return this.mKeycheck(mkey, id);
@@ -246,7 +261,7 @@ export default class CheckValid {
         if (Object.keys(query).length === 1 && query.ORDER == null) {
             return true;
         }
-        if (query.COLUMNS.includes(query.ORDER)) {
+        if (Object.keys(query.ORDER).length === 1 || query.COLUMNS.includes(query.ORDER)) {
             return true;
         } else {
             throw new InsightError("Invalid Order that not in Columns");

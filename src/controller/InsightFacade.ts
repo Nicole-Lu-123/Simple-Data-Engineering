@@ -124,16 +124,20 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public performQuery(query: any): Promise <any[]> {
-        let id = QueryBranch.getstring(query);
-        if (this.dataSetsIDs.includes(id)) {
-            return this.querybranch.performQuery(query, this.myDatasetMap, id);
-        } else if (fs.existsSync("./data/" + id + ".json")) {
-            let contents = fs.readFileSync("./data/" + id + ".json");
-            let jsonContent = JSON.parse(contents);
-            this.myDatasetMap.set(id, jsonContent);
-            return this.querybranch.performQuery(query, this.myDatasetMap, id);
-        } else {
-            return  Promise.reject("Not Found error");
+        try {
+            let id = QueryBranch.getstring(query);
+            if (this.dataSetsIDs.includes(id)) {
+                return this.querybranch.performQuery(query, this.myDatasetMap, id);
+            } else if (fs.existsSync("./data/" + id + ".json")) {
+                let contents = fs.readFileSync("./data/" + id + ".json");
+                let jsonContent = JSON.parse(contents);
+                this.myDatasetMap.set(id, jsonContent);
+                return this.querybranch.performQuery(query, this.myDatasetMap, id);
+            } else {
+                return Promise.reject("Not Found error");
+            }
+        } catch (e) {
+            return Promise.reject(e);
         }
     }
 
