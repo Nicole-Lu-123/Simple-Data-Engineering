@@ -7,6 +7,7 @@ import {JSZipObject} from "jszip";
 import validate = WebAssembly.validate;
 import QueryBranch from "./QueryBranch";
 
+
 /**
  * This is the main programmatic entry point for the project.
  * Method documentation is in IInsightFacade
@@ -231,16 +232,16 @@ export default class InsightFacade implements IInsightFacade {
         //     tempSection. courses_year = 1990;
         // }
         let courseObject: any = new Object();
-        courseObject[id + "_dept"] = section["Subject"];
-        courseObject[id + "_id"] = section["Course"];
-        courseObject[id + "_avg"] = section["Avg"];
-        courseObject[id + "_instructor"] = section["Professor"];
-        courseObject[id + "_title"] = section["Title"];
-        courseObject[id + "_pass"] = section["Pass"];
-        courseObject[id + "_fail"] = section["Fail"];
-        courseObject[id + "_audit"] = section["Audit"];
-        courseObject[id + "_uuid"] = section["id"].toString();
-        courseObject[id + "_year"] = Number(section["Year"]);
+        courseObject[id + "_dept"] = section.Subject;
+        courseObject[id + "_id"] = section.Course;
+        courseObject[id + "_avg"] = section.Avg;
+        courseObject[id + "_instructor"] = section.Professor;
+        courseObject[id + "_title"] = section.Title;
+        courseObject[id + "_pass"] = section.Pass;
+        courseObject[id + "_fail"] = section.Fail;
+        courseObject[id + "_audit"] = section.Audit;
+        courseObject[id + "_uuid"] = this.setUUID(section.id);
+        courseObject[id + "_year"] = Number(section.Year);
         if (section["Section"] === "overall") {
             courseObject[id + "_year"] = 1900;
         }

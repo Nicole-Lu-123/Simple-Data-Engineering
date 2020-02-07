@@ -33,7 +33,7 @@ export default class CheckValid {
             return this.MCcheck(query, id);
         }
         if (query.IS) {
-            return this.SCcheck(query, id);
+            return this.SCcheck(query, id) && this.IPstringcheck(query.IS);
         }
         if (query.NOT) {
             return this.checkValidFilter(query.NOT, id);
@@ -41,7 +41,45 @@ export default class CheckValid {
             throw new InsightError("Invalid query, filter in AND/OR/NOT is in wrong type");
         }
     }
+    private IPstringcheck(ISquery: any): boolean {
+        let wild: string = "*";
+        let skey: string = Object.keys(ISquery)[0];
+        if (typeof ISquery[skey] === "string") {
+            let value: string = ISquery[skey];
+            let valuelen = value.length;
+            if (value.includes(wild)) {
+                if (value.startsWith(wild) && value.endsWith(wild)) {
+                    let realvalue = value.substring(1, valuelen - 1);
+                    if (realvalue.includes(wild)) {
+                        throw new InsightError("Invalid query for using wildcard in a wrong way!");
+                    } else {
+                        return true;
+                    }
+                }
+                if (value.startsWith(wild)) {
+                    let realvalue = value.substring(1, valuelen);
+                    if (realvalue.includes(wild)) {
+                        throw new InsightError("Invalid query for using wildcard in a wrong way!");
+                    } else {
+                        return true;
+                    }
+                }
+                if (value.endsWith(wild)) {
+                    let realvalue = value.substring(0, valuelen - 1);
+                    if (realvalue.includes(wild)) {
+                        throw new InsightError("Invalid query for using wildcard in a wrong way!");
+                    } else {
+                        return true;
+                    }
+                }
+            } else {
+                return true;
+            }
+        } else {
+            throw new InsightError("Invalid query! The input string is not a string!");
+        }
 
+    }
     private LCcheckEach(LClist: any[], id: string): boolean {
         if (LClist.length >= 2) {
             for (let LC of LClist) {
