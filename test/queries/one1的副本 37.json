@@ -1,0 +1,37 @@
+{
+    "title": "element in GROUP is not a key",
+    "query": 
+{
+    "WHERE": {
+        "AND": [{
+            "IS": {
+                "rooms_furniture": "*Tables*"
+            }
+        }, {
+            "GT": {
+                "rooms_seats": 300
+            }
+        }]
+    },
+    "OPTIONS": {
+        "COLUMNS": [
+            "rooms_shortname",
+            "maxSeats"
+        ],
+        "ORDER": {
+            "dir": "DOWN",
+            "keys": ["maxSeats"]
+        }
+    },
+    "TRANSFORMATIONS": {
+        "GROUP": ["maxSeats"],
+        "APPLY": [{
+            "maxSeats": {
+                "MAX": "rooms_seats"
+            }
+        }]
+    }
+},
+    "isQueryValid": false,
+    "result": "InsightError"
+}

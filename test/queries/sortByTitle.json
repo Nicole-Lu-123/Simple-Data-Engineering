@@ -1,0 +1,132 @@
+{
+    "title": "Query sort by title",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "GT": {
+                        "courses_avg": 98
+                    }
+                },
+                {
+                    "LT": {
+                        "courses_avg": 30
+                    }
+                },
+                {
+                    "EQ": {
+                        "courses_audit": 20
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_title"
+            ],
+            "ORDER": "courses_title"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_title": "algb topology i"
+        },
+        {
+            "courses_title": "algb topology i"
+        },
+        {
+            "courses_title": "assess lrn diffi"
+        },
+        {
+            "courses_title": "assess lrn diffi"
+        },
+        {
+            "courses_title": "assess lrn diffi"
+        },
+        {
+            "courses_title": "career planning"
+        },
+        {
+            "courses_title": "cl pro prim care"
+        },
+        {
+            "courses_title": "cl pro prim care"
+        },
+        {
+            "courses_title": "cl pro prim care"
+        },
+        {
+            "courses_title": "cl pro prim care"
+        },
+        {
+            "courses_title": "dev el sk df&hrd"
+        },
+        {
+            "courses_title": "dev el sk df&hrd"
+        },
+        {
+            "courses_title": "dev rehab prog"
+        },
+        {
+            "courses_title": "educ stds autism"
+        },
+        {
+            "courses_title": "educ stds autism"
+        },
+        {
+            "courses_title": "educ stds autism"
+        },
+        {
+            "courses_title": "educ stds autism"
+        },
+        {
+            "courses_title": "educ stds autism"
+        },
+        {
+            "courses_title": "fam nrs pract"
+        },
+        {
+            "courses_title": "fam nrs pract"
+        },
+        {
+            "courses_title": "fam nrs pract"
+        },
+        {
+            "courses_title": "fam nrs pract"
+        },
+        {
+            "courses_title": "forest ecology"
+        },
+        {
+            "courses_title": "found re apprai"
+        },
+        {
+            "courses_title": "found re apprai"
+        },
+        {
+            "courses_title": "in land food com"
+        },
+        {
+            "courses_title": "in land food com"
+        },
+        {
+            "courses_title": "multimedia sys"
+        },
+        {
+            "courses_title": "multimedia sys"
+        },
+        {
+            "courses_title": "prpty,ident&uses"
+        },
+        {
+            "courses_title": "sustnbt&frst ops"
+        },
+        {
+            "courses_title": "work int health"
+        },
+        {
+            "courses_title": "work int health"
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "title": "Invalid query with null NOT",
+    "query": {
+        "WHERE": {
+            "NOT": null
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

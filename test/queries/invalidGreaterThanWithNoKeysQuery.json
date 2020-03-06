@@ -1,0 +1,18 @@
+{
+    "title": "Invalid query greater than no keys",
+    "query": {
+        "WHERE": {
+            "GT": {
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

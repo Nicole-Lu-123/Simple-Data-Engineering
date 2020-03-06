@@ -1,0 +1,174 @@
+{
+    "title": "d2 course multiple group empty apply",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "courses_dept": "*ps*"
+                    }
+                },
+                {
+                    "GT": {
+                        "courses_avg": 95
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_instructor"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": [
+                    "courses_dept",
+                    "courses_instructor"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_dept",
+                "courses_instructor"
+            ],
+            "APPLY": []
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "psyc",
+            "courses_instructor": "wagner, john"
+        },
+        {
+            "courses_dept": "psyc",
+            "courses_instructor": "sochting, ingrid"
+        },
+        {
+            "courses_dept": "psyc",
+            "courses_instructor": "de longis, anita"
+        },
+        {
+            "courses_dept": "psyc",
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "wu, amery"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "wilk, diana"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "weber, rachel"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "stockman, james"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "smith, gillian"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "romero, amber"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "porath, marion"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "mcquarrie, maureen"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "mceachern hughes, tammy"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "levinson, tami"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "kishor, nand"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "grow, laura"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "gaster, sean"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "ford, laurie"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "ervin, ruth"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "cole, kenneth"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "chan, eric"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "champion, kathleen"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "cannon, joanna"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": "amaral, deborah;ford, laurie"
+        },
+        {
+            "courses_dept": "epse",
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "cnps",
+            "courses_instructor": "weinberg, mark"
+        },
+        {
+            "courses_dept": "cnps",
+            "courses_instructor": "owens, rhea"
+        },
+        {
+            "courses_dept": "cnps",
+            "courses_instructor": "neault, roberta a"
+        },
+        {
+            "courses_dept": "cnps",
+            "courses_instructor": "munteanu, mircea"
+        },
+        {
+            "courses_dept": "cnps",
+            "courses_instructor": "cox, daniel"
+        },
+        {
+            "courses_dept": "cnps",
+            "courses_instructor": "carter, john"
+        },
+        {
+            "courses_dept": "cnps",
+            "courses_instructor": ""
+        },
+        {
+            "courses_dept": "apsc",
+            "courses_instructor": "wassink, berend"
+        }
+    ]
+}

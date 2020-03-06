@@ -1,0 +1,132 @@
+{
+    "title": "Query sort by uuid",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "GT": {
+                        "courses_avg": 98
+                    }
+                },
+                {
+                    "LT": {
+                        "courses_avg": 30
+                    }
+                },
+                {
+                    "EQ": {
+                        "courses_audit": 20
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_uuid"
+            ],
+            "ORDER": "courses_uuid"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_uuid": "10235"
+        },
+        {
+            "courses_uuid": "10236"
+        },
+        {
+            "courses_uuid": "15343"
+        },
+        {
+            "courses_uuid": "15344"
+        },
+        {
+            "courses_uuid": "16427"
+        },
+        {
+            "courses_uuid": "16428"
+        },
+        {
+            "courses_uuid": "26777"
+        },
+        {
+            "courses_uuid": "29255"
+        },
+        {
+            "courses_uuid": "29256"
+        },
+        {
+            "courses_uuid": "33779"
+        },
+        {
+            "courses_uuid": "33780"
+        },
+        {
+            "courses_uuid": "33781"
+        },
+        {
+            "courses_uuid": "44816"
+        },
+        {
+            "courses_uuid": "44817"
+        },
+        {
+            "courses_uuid": "49677"
+        },
+        {
+            "courses_uuid": "49678"
+        },
+        {
+            "courses_uuid": "49835"
+        },
+        {
+            "courses_uuid": "5373"
+        },
+        {
+            "courses_uuid": "5374"
+        },
+        {
+            "courses_uuid": "56402"
+        },
+        {
+            "courses_uuid": "56403"
+        },
+        {
+            "courses_uuid": "6320"
+        },
+        {
+            "courses_uuid": "65069"
+        },
+        {
+            "courses_uuid": "65070"
+        },
+        {
+            "courses_uuid": "73638"
+        },
+        {
+            "courses_uuid": "73639"
+        },
+        {
+            "courses_uuid": "76505"
+        },
+        {
+            "courses_uuid": "84769"
+        },
+        {
+            "courses_uuid": "88151"
+        },
+        {
+            "courses_uuid": "88152"
+        },
+        {
+            "courses_uuid": "89536"
+        },
+        {
+            "courses_uuid": "96250"
+        },
+        {
+            "courses_uuid": "96251"
+        }
+    ]
+}

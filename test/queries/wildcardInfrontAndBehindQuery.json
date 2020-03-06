@@ -1,0 +1,276 @@
+{
+    "title": "SELECT dept, avg, IS dept = *oi*",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_dept": "*oi*"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "soil",
+            "courses_avg": 73.38
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 73.38
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 74.44
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 74.44
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 75.5
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 75.5
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 77.14
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 77.14
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 77.25
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 77.25
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 78
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 78
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 78.14
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 78.14
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 79.5
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 79.5
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 80
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 80
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 80.86
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 80.86
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 80.9
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 80.9
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 81
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 81
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 81.17
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 81.17
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 81.27
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 81.27
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 81.64
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 81.64
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 81.89
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 81.89
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 82
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 82
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 82.14
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 82.14
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 83.14
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 83.14
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 83.18
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 83.18
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 83.4
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 83.4
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 83.5
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 83.5
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 83.75
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 83.75
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 84.57
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 84.57
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 85.2
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 85.2
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 86.8
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 86.8
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 87
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 87
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 87.75
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 87.75
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 89.67
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 89.67
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 89.75
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 89.75
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 90.71
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 90.71
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 91.43
+        },
+        {
+            "courses_dept": "soil",
+            "courses_avg": 91.43
+        }
+    ]
+}

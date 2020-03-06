@@ -1,0 +1,87 @@
+{
+    "title": "D2 query different room dataset",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "roomsDifferentId_furniture": "*Tables*"
+                    }
+                },
+                {
+                    "GT": {
+                        "roomsDifferentId_seats": 200
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "sumSeats",
+                "roomsDifferentId_number"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": [
+                    "sumSeats",
+                    "roomsDifferentId_number"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "roomsDifferentId_number"
+            ],
+            "APPLY": [
+                {
+                    "sumSeats": {
+                        "SUM": "roomsDifferentId_seats"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "roomsDifferentId_number": "A",
+            "sumSeats": 442
+        },
+        {
+            "roomsDifferentId_number": "100",
+            "sumSeats": 375
+        },
+        {
+            "roomsDifferentId_number": "1002",
+            "sumSeats": 350
+        },
+        {
+            "roomsDifferentId_number": "1001",
+            "sumSeats": 350
+        },
+        {
+            "roomsDifferentId_number": "220C",
+            "sumSeats": 299
+        },
+        {
+            "roomsDifferentId_number": "220B",
+            "sumSeats": 299
+        },
+        {
+            "roomsDifferentId_number": "220A",
+            "sumSeats": 299
+        },
+        {
+            "roomsDifferentId_number": "098",
+            "sumSeats": 260
+        },
+        {
+            "roomsDifferentId_number": "1101",
+            "sumSeats": 236
+        },
+        {
+            "roomsDifferentId_number": "200",
+            "sumSeats": 205
+        }
+    ]
+}
