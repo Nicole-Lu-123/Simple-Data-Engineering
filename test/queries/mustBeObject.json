@@ -1,8 +1,0 @@
-{
-    "title": "400: Query must be object",
-    "query": [
-
-    ],
-    "isQueryValid": false,
-    "result": "InsightError"
-}

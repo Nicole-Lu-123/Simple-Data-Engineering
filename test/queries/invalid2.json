@@ -1,9 +1,0 @@
-{
-    "title": "Very invalid query2",
-    "query": {
-        "WHERE": {}},
-    "isQueryValid": false,
-    "result": "InsightError"
-}
-
-

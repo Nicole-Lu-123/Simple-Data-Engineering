@@ -1,0 +1,26 @@
+{
+    "title": "Simple title query",
+    "query": {
+        "WHERE": {
+            "EQ": {
+                "courses_avg": 95
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_avg",
+                "_theAmount"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": ["courses_avg"],
+            "APPLY": [{
+                "_theAmount": {
+                    "COUNT": "courses_id"
+                }
+            }]
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

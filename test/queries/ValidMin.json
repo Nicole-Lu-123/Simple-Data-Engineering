@@ -1,0 +1,30 @@
+{
+    "title": "Simple title query",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 97
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_id",
+                "theAmount"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_id"
+            ],
+            "APPLY": [
+                {
+                    "theAmount": {
+                        "MIN": "courses_avg"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [{"courses_id":"300","theAmount":98.98},{"courses_id":"421","theAmount":97.29},{"courses_id":"449","theAmount":97.41},{"courses_id":"500","theAmount":97.5},{"courses_id":"509","theAmount":98.21},{"courses_id":"519","theAmount":98.45},{"courses_id":"525","theAmount":97.25},{"courses_id":"527","theAmount":99.78},{"courses_id":"532","theAmount":97.48},{"courses_id":"534","theAmount":97.41},{"courses_id":"541","theAmount":97.09},{"courses_id":"549","theAmount":97.69},{"courses_id":"574","theAmount":97.47},{"courses_id":"578","theAmount":97.53},{"courses_id":"591","theAmount":97.33},{"courses_id":"596","theAmount":97.09},{"courses_id":"599","theAmount":98},{"courses_id":"606","theAmount":97.67}]
+    }
