@@ -8,7 +8,7 @@ export default class CheckOptions {
             if (query.COLUMNS) {
                 return this.checkColumns(query, id) && this.checkOrder(query);
             } else {
-                throw new InsightError("Invalid Options with no Column!");
+                throw new InsightError(" Invalid Options with no Column!");
             }
         } else {
             throw new InsightError("Invalid Options!");

@@ -12,7 +12,7 @@ export default class CheckValid {
         let checkoptions = new CheckOptions();
         let elements: string[] = Object.keys(query);
         if (elements.length < 2 || elements.length > 3) {
-            throw new InsightError("Invalid query formation!");
+            throw new InsightError(" Invalid query formation!");
         }
         if (elements.length === 2) {
             if (query.WHERE === undefined || query.OPTIONS === undefined) {

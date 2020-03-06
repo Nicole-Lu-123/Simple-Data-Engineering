@@ -182,7 +182,7 @@ export default class QueryBranch {
         let Column: string[] = OPTIONquery.COLUMNS;
         let ColumnResult: any[] = [];
         if (sections.length > 5000) {
-            throw new ResultTooLargeError("The reult is too large");
+            throw new ResultTooLargeError(" The reult is too large");
         }
         for (let section of sections) {
             let res: any = {};

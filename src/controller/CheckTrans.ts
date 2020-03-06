@@ -45,7 +45,7 @@ export default class CheckTrans {
     private checkApply(query: any, id: string): boolean {
         let applys: any[] = query.TRANSFORMATIONS.APPLY;
         if (applys.length < 1) {
-            throw new InsightError("Invalid APPLY list");
+            throw new InsightError(" Invalid APPLY list");
         } else {
             for (let applyrule of applys) {
                 if (typeof applyrule !== "object") {
