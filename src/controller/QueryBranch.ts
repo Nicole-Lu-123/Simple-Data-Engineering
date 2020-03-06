@@ -1,6 +1,8 @@
 import {InsightError, ResultTooLargeError} from "./IInsightFacade";
 import CheckValid from "./CheckValid";
 import Transformation from "./Transformation";
+import CheckTrans from "./CheckTrans";
+import CheckOptions from "./CheckOptions";
 export default class QueryBranch {
     public performQuery(query: any, section: any[], id: string): Promise<any[]> {
         try {
@@ -8,7 +10,8 @@ export default class QueryBranch {
             if (ckvalid.CheckValid(query, id)) {
                 let result1 = this.filterList(id, query, section);
                 if (query.TRANSFORMATIONS) {
-                    let result2 = this.transformList(query.TRANSFORMATIONS, result1);
+                    let transform = new Transformation();
+                    let result2 = transform.transResult(query.TRANSFORMATIONS,  result1);
                     return Promise.resolve(this.orderedResult(query.OPTIONS, result2));
                 }
                 return Promise.resolve(this.orderedResult(query.OPTIONS, result1));
@@ -28,43 +31,25 @@ export default class QueryBranch {
         }
     }
 
-    private transformList(query: any, section: any[]): any[] {
-        let transform = new Transformation();
-        return transform.transResult(query, section);
-    }
-
     public static getstring(query: any): string {
-        if (query === null || query.WHERE == null || query.OPTIONS == null) {
+        let checktrans = new CheckTrans();
+        let checkoptions = new CheckOptions();
+        if (query === null) {
             throw new InsightError("Invalid query! One of WHERE and OPTIONS or both are null");
-        }
-        if (query.OPTIONS.COLUMNS == null || query.OPTIONS.COLUMNS.length === 0) {
-            throw new InsightError("Can't find a valid id in Invalid Query!");
-        }
-        let column = query.OPTIONS.COLUMNS;
-        for (let col of column) {
-            if (typeof col === "string") {
-                if (col.includes("_") && col.split("_").length !== 2) {
-                    throw new InsightError("Invalid query! There are not keys in columns");
-                }
-                return col.split("_")[0];
+        } else if (query.TRANSFORMATIONS && query.TRANSFORMATIONS.GROUP) {
+            if (checktrans.EasycheckGroup(query)) {
+                let group = query.TRANSFORMATIONS.GROUP;
+                return group[0].split("_")[0];
             } else {
-                throw new InsightError("Invalid query! Column is Not a string");
-            }
-        }
-        if (!query.TRANSFORMATIONS || !query.TRANSFORMATIONS.GROUP) {
-            throw new InsightError("Invalid query! Cant find the id in apply");
-        } else {
-            let group = query.TRANSFORMATIONS.GROUP;
-            if (group === null || Object.keys(group).length < 1) {
-                throw new InsightError("Invalid query! Cant find the id in invalid apply");
-            } else {
-                let key = group[0];
-                if (typeof key === "string" && key.includes("_") && key.split("_").length === 2) {
-                    return key.split("_")[0];
-                } else {
-                    throw new InsightError("Invalid query! There are not keys in columns");
+                throw new InsightError("Invalid Transformation");
+                    }
+        } else if (query.OPTIONS && query.OPTIONS.COLUMNS) {
+                   if (checkoptions.EasycheckColumnsKEYONLY(query)) {
+                       let column = query.OPTIONS.COLUMNS;
+                       return column[0].split("_")[0];
                 }
-            }
+            } else {
+            throw new InsightError("Invalid query! Cant find the id in query");
         }
     }
 

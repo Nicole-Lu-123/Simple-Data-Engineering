@@ -13,7 +13,7 @@ export default class CheckTrans {
     public CheckTrans(query: any, id: string): boolean {
         let trans = query.TRANSFORMATIONS;
         if (Object.keys(trans).length === 2) {
-            if (trans.GROUP && trans.APPLY && Object.keys(trans)[0] === "GROUP") {
+            if (trans.GROUP && trans.APPLY) {
                 if (this.checkGroup(query, id) && this.checkApply(query, id)) {
                 return (this.checkColumnkeys(query));
             } else {
@@ -47,28 +47,43 @@ export default class CheckTrans {
         }
     }
 
-    private checkGroup(query: any, id: string): boolean {
+    private  checkGroup(query: any, id: string): boolean {
+        if (this.EasycheckGroup(query)) {
+            for (let group of query.TRANSFORMATIONS.GROUP) {
+                if (typeof group !== "string") {
+                    throw new InsightError("Invalid type of key in group");
+                }
+                if (!this.checkoptions.checkKey(group, id)) {
+                    throw new InsightError("Invalid keys in gr oup");
+                }
+            }
+            return true;
+        }
+    }
+
+    public EasycheckGroup(query: any): boolean {
         let groups = query.TRANSFORMATIONS.GROUP;
-        let column = query.OPTIONS.COLUMNS;
-        if (groups.length < 1) {
-            throw new InsightError("Invalid group with no element in");
+        if (!Array.isArray(groups) || groups === null || groups.length < 1) {
+            throw new InsightError("Invalid group type or with no element in");
         }
         for (let group of groups) {
-            if (typeof group !== "string") {
+            if (typeof group !== "string" || !group.includes("_") || group.split("_").length !== 2) {
                 throw new InsightError("Invalid type of key in group");
-            }
-            if (!this.checkoptions.checkKey(group, id)) {
-                throw new InsightError("Invalid keys in gr oup");
+            } else if (group.split("_")[0] === null && group.split("_")[1] === null) {
+                throw new InsightError("Invalid keys in group");
             }
         }
         return true;
     }
 
     private checkApply(query: any, id: string): boolean {
-        let applys: any[] = query.TRANSFORMATIONS.APPLY;
-        if (applys.length < 1) {
+        let applys = query.TRANSFORMATIONS.APPLY;
+        if (!Array.isArray(applys) || applys == null ) {
             throw new InsightError(" Invalid APPLY list");
+        } else if (applys.length === 0) {
+            return true;
         } else {
+            let applykeys: string[] = [];
             for (let applyrule of applys) {
                 if (typeof applyrule !== "object") {
                     throw new InsightError("Invalid APPLY list");
@@ -78,13 +93,31 @@ export default class CheckTrans {
                 }
                 let applykey = Object.keys(applyrule)[0];
                 let applyobj = applyrule[applykey];
+                if (applykey === null || applyobj === null) {
+                    throw new InsightError("Invalid Applyrule formation, null applykeys");
+                }
                 if (!this.checkApplyKey(applykey, query) || !this.checkApplyToken(applyobj, id)) {
                     throw new InsightError("Invalid Applyrule formation");
                 }
+                applykeys.push(applykey);
+            }
+            if (!this.checkduplicate(applykeys)) {
+                throw new InsightError("Invalid APPLYkey list");
             }
             return true;
         }
     }
+
+    private checkduplicate(list: string[]): boolean {
+       let unique: string[] = [];
+       for (let ele of list) {
+        if (!unique.includes(ele)) {
+            unique.push(ele);
+        }
+       }
+       return ( unique.length === list.length );
+    }
+
 
     private checkApplyKey(applykey: any, query: any): boolean {
         if (typeof applykey !== "string" || !this.checkoptions.checkApplykey(applykey)) {
