@@ -1,0 +1,39 @@
+{
+    "title": "Query sort by title",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "GT": {
+                        "courses_avg": 99
+                    }
+                },
+                {
+                    "LT": {
+                        "courses_avg": 30
+                    }
+                },
+                {
+                    "EQ": {
+                        "courses_audit": 20
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_title",
+                "courses_avg"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": [
+                    "courses_avg",
+                    "courses_title"
+                ]
+            }
+        }
+    },
+    "isQueryValid": true,
+    "result": [{"courses_title":"forest ecology","courses_avg":0},{"courses_title":"in land food com","courses_avg":0},{"courses_title":"in land food com","courses_avg":0},{"courses_title":"prpty,ident&uses","courses_avg":1},{"courses_title":"found re apprai","courses_avg":4},{"courses_title":"found re apprai","courses_avg":4},{"courses_title":"sustnbt&frst ops","courses_avg":4.5},{"courses_title":"dev rehab prog","courses_avg":87.26},{"courses_title":"career planning","courses_avg":99.19},{"courses_title":"algb topology i","courses_avg":99.78},{"courses_title":"algb topology i","courses_avg":99.78}]
+    }

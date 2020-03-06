@@ -351,7 +351,7 @@ describe("InsightFacade PerformQuery", () => {
         });
     });
 //     it(`test`, function (done) {
-//         const testQueryJson = testQueries[6];
+//         const testQueryJson = testQueries[0];
 //         insightFacade.performQuery(testQueryJson.query).then((result: any[]) => {
 //             TestUtil.checkQueryResult(testQueryJson, result, done);
 //         }).catch((err) => {

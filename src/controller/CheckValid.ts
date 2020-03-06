@@ -12,30 +12,30 @@ export default class CheckValid {
         let checkoptions = new CheckOptions();
         let elements: string[] = Object.keys(query);
         if (elements.length < 2 || elements.length > 3) {
-            throw new InsightError(" Invalid query formation!");
+            throw new InsightError(" Invalid query formation1!");
         }
         if (elements.length === 2) {
-            if (query.WHERE === undefined || query.OPTIONS === undefined) {
-                throw new InsightError("Invalid query formation!");
+            if (query.WHERE == null || query.OPTIONS == null) {
+                throw new InsightError("Invalid query formation2!");
             } else {
-                return this.checkValidBody(query.WHERE, id) && checkoptions.CheckValidOption(query.OPTIONS, id);
+                return this.checkValidBody(query.WHERE, id) && checkoptions.CheckValidOption(query, id, "KEY");
             }
         } else {
-            if (query.WHERE === undefined || query.OPTIONS === undefined) {
-                throw new InsightError("Invalid query formation!");
+            if (query.WHERE == null || query.OPTIONS == null) {
+                throw new InsightError("Invalid query formation3!");
             }
-            if (this.checkValidBody(query.WHERE, id) && checkoptions.CheckValidOption(query.OPTIONS, id)) {
-                if (query.TRANSFORMATIONS) {
+            if (query.TRANSFORMATIONS) {
+                if (this.checkValidBody(query.WHERE, id) && checkoptions.CheckValidOption(query, id, "ANYKEY")) {
                     let checktrans = new CheckTrans();
                     return checktrans.CheckTrans(query, id);
                 } else {
-                    throw new InsightError("Invalid query formation!");
+                    throw new InsightError("Invalid query body or Options");
                 }
             } else {
-                return false;
+                throw new InsightError("Invalid query formation4!");
             }
         }
-}
+    }
 
     public givekeys(req: string, id: string): string[] {
         if (id === "courses") {
@@ -80,7 +80,11 @@ export default class CheckValid {
             throw new InsightError("Invalid! At least one filter is null.");
         }
         if (query.AND) {
-            return this.LCcheckEach(query.AND, id);
+            if (!Array.isArray(query.AND) || query.AND === null) {
+                throw new InsightError("Invalid query, filter in And is in wrong type");
+            } else {
+                return this.LCcheckEach(query.AND, id);
+            }
         }
         if (query.OR) {
             return this.LCcheckEach(query.OR, id);

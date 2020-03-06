@@ -4,7 +4,6 @@ import * as JSZip from "jszip";
 import {JSZipObject} from "jszip";
 import QueryBranch from "./QueryBranch";
 import RoomBranch from "./RoomBranch";
-
 /**
  * This is the main programmatic entry point for the project.
  * Method documentation is in IInsightFacade

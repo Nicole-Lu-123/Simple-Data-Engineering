@@ -51,9 +51,11 @@ export default class Transformation {
             for (let groupreq of groupreqs) {
                 res[groupreq] = objlist[0][groupreq];
             }
-            for (let applyrule of applyrules) {
-                let applykey = Object.keys(applyrule)[0];
-                res[applykey] = this.ApplyValue(applyrule[applykey], objlist);
+            if (applyrules.length > 0) {
+                for (let applyrule of applyrules) {
+                    let applykey = Object.keys(applyrule)[0];
+                    res[applykey] = this.ApplyValue(applyrule[applykey], objlist);
+                }
             }
             applyResult.push(res);
         }
