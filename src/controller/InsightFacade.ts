@@ -46,53 +46,65 @@ export default class InsightFacade implements IInsightFacade {
         Log.trace("InsightFacadeImpl::init()");
 
     }
+
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        let self = this, finalSectionsArr: CourseSection[] = [];
+        let self = this, PromiseSectionsArr: CourseSection[] = [], zip = new JSZip();
         numRows = 0;
-        let promiseCoursesFiles: any[] = [];
-        let zip = new JSZip();
         return new Promise((resolve, reject) => {
             if (self.badDatasetID(id) || self.badContent(content) || self.dataSetsIDs.includes(id)) {
                 return reject(new InsightError("Invalid Input or existed dataset"));
             } else {
                 zip.loadAsync(content, {base64: true}).then((AllFiles) => {
+                    let jsonCoursesFiles: any[] = [];
                     AllFiles.forEach(function (relativePath: string, file: JSZipObject) {
                         // check courses directory <-- helper 3 <--helper 4 no subfolder
                         validFile = self.validCoursesFile(relativePath, file);
                         // start to creat not promise(sigle course file) if is a valide file
                         if (validFile === true) {
-                            let aNewCourse = file.async("text").then(function (CourseJasonData: string) {
-                                let currCourseSectionArr: CourseSection[] = [];
-                                currCourseSectionArr = self.makePreSavedSections(CourseJasonData, id);
-                                if (CourseJasonData.length !== 0) {
-                                    finalSectionsArr = finalSectionsArr.concat(currCourseSectionArr);
-                                }
-                            });
-                            promiseCoursesFiles.push(aNewCourse);
+                            jsonCoursesFiles.push(file.async("text"));
+                            // let aNewCourse = file.async("text").then(function (CourseJsonData: string) {
+                            //     let UnchainedSectionArr: CourseSection[] = [];
+                            //     UnchainedSectionArr = self.makePreSavedSections(CourseJsonData, id);
+                            //     if (CourseJsonData.length !== 0) {
+                            //         PromiseSectionsArr = PromiseSectionsArr.concat(UnchainedSectionArr);
+                            //     }
+                            // });
+                            // promiseCoursesFiles.push(aNewCourse);
                         }
-
                     });
+                    return jsonCoursesFiles;
+                }).then(function (jsonCoursesFiles: any) {
+                    return Promise.all(jsonCoursesFiles);
+                }).then(function (jsonCoursesFiles: any) {
+                    for (let aNewCourse of jsonCoursesFiles) {
+                        let UnchainedSectionArr: CourseSection[] = [];
+                        UnchainedSectionArr = self.makePreSavedSections(aNewCourse, id);
+                        if (aNewCourse.length !== 0) {
+                            PromiseSectionsArr = PromiseSectionsArr.concat(UnchainedSectionArr);
+                        }
+                        // promiseCoursesFiles.push(aNewCourse);
+                    }
                 }).catch(function (e) {
                     return reject(new InsightError("unzip process failed!")); // catch unzip errors
                 }).then(() => {
-                    Promise.all(promiseCoursesFiles).then(function () {
-                        try {
-                            if (finalSectionsArr.length === 0) {
-                                return reject(new InsightError());
-                            }
-                            self.dataSetsIDs.push(id);
-                            self.dataSetsMap.set(id, self.makeNewDataset(id, kind, finalSectionsArr.length));
-                            self.myDatasetMap.set(id, finalSectionsArr);
-                            let path = "./data/" + id + ".json";
-                            if (!fs.existsSync("./data/")) {
-                                fs.mkdirSync("./data/");
-                            }
-                            fs.writeFileSync(path, JSON.stringify(finalSectionsArr), "utf-8");
-                            return resolve(self.dataSetsIDs);
-                        } catch (e) {
-                            return reject(new InsightError("promise all error"));
+                    // Promise.all(promiseCoursesFiles).then(function () {
+                    try {
+                        if (PromiseSectionsArr.length === 0) {
+                            return reject(new InsightError());
                         }
-                    });
+                        self.dataSetsIDs.push(id);
+                        self.dataSetsMap.set(id, self.makeNewDataset(id, kind, PromiseSectionsArr.length));
+                        self.myDatasetMap.set(id, PromiseSectionsArr);
+                        let path = "./data/" + id + ".json";
+                        if (!fs.existsSync("./data/")) {
+                            fs.mkdirSync("./data/");
+                        }
+                        fs.writeFileSync(path, JSON.stringify(PromiseSectionsArr), "utf-8");
+                        return resolve(self.dataSetsIDs);
+                    } catch (e) {
+                        return reject(new InsightError("promise all error"));
+                    }
+                    // });
                 });
                 //
 
@@ -149,6 +161,7 @@ export default class InsightFacade implements IInsightFacade {
             return resolve (tempDatasats);
         });
     }
+
     // Helper functions
     //
     // 1 -check input DatasetID
@@ -159,6 +172,7 @@ export default class InsightFacade implements IInsightFacade {
             return false;
         }
     }
+
     // 2 -check input content
     public badContent(content: string): boolean {
         if (content === null || content === undefined) {
@@ -167,6 +181,7 @@ export default class InsightFacade implements IInsightFacade {
             return false;
         }
     }
+
     // 3 -check valid file under "courses" directory
     //   use helper 4 /check true if no subfolder, false then has sub_folder
     public validCoursesFile (relativePath: string, file: JSZipObject): boolean {
@@ -179,11 +194,13 @@ export default class InsightFacade implements IInsightFacade {
             }
         }
     }
+
     // 4 - count folders(dir)
     public  countFolder (relativePath: string): number {
         let count: number = (relativePath.match(/[/]/g) || []).length;
         return count;
     }
+
     // 5 - save the current jsonObj(file-course) to data structure.
     public makePreSavedSections(CourseJasonData: string, id: string): CourseSection[] {
         let currSections: any[] = [];
@@ -192,11 +209,11 @@ export default class InsightFacade implements IInsightFacade {
             // let validunstoredParsedCourseData: object = unstoredParsedCourseData.result[0]; // ???
             // if (unstoredParsedCourseData.result) {
             for (let oneSection of unstoredParsedCourseData.result) {
-                    if (this.validSection(oneSection)) {
-                        currSections.push(this.makeCorseSection(oneSection, id));
-                        numRows ++;
-                    }
+                if (this.validSection(oneSection)) {
+                    currSections.push(this.makeCorseSection(oneSection, id));
+                    numRows ++;
                 }
+            }
             // }
         } catch (e) {
             Log.trace(e);
@@ -205,6 +222,7 @@ export default class InsightFacade implements IInsightFacade {
         }
         return currSections;
     }
+
     // 6 - check if the section is valid
     public validSection(section: any) {
         return ((typeof (section.Subject) !== "undefined") && (typeof (section.Course) !== "undefined") &&
@@ -218,6 +236,7 @@ export default class InsightFacade implements IInsightFacade {
         // && (typeof (section.Fail) === "number") && (typeof section.Audit === "number")
         // && (typeof (section.id) === "number") && (typeof section.Section === "number"));
     }
+
     // 7 - make a new course section
     public makeCorseSection(section: any, id: string): CourseSection {
         // let tempSection: CourseSection = {
@@ -251,10 +270,12 @@ export default class InsightFacade implements IInsightFacade {
         }
         return courseObject;
     }
+
     // 8
     public setUUID (id: any) {
         return id.toString();
     }
+
     // 9 make new dataset
     public  makeNewDataset (id: string, kind: InsightDatasetKind, length: number): InsightDataset {
         let newDataset = {
@@ -264,14 +285,4 @@ export default class InsightFacade implements IInsightFacade {
         };
         return newDataset;
     }
-
-
-    // check input InsightDataset Kind // ??? check or not
-    // public badKind(kind: InsightDatasetKind): boolean {
-    //     if (kind === null || kind === undefined) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
 }

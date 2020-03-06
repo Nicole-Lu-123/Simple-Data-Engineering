@@ -1,31 +1,40 @@
 import {InsightError, ResultTooLargeError} from "./IInsightFacade";
-import Log from "../Util";
 import CheckValid from "./CheckValid";
+import Transformation from "./Transformation";
+
 
 export default class QueryBranch {
-    public ckvalid: CheckValid;
-
-    constructor() {
-        this.ckvalid = new CheckValid();
-        Log.trace("InsightFacadeImpl::init()");
-    }
-
     public performQuery(query: any, datasets: any, id: string): Promise<any[]> {
         try {
             let section = datasets.get(id);
-            if (this.ckvalid.CheckValid(query, id)) {
-                let result1: any[];
-                if (Object.keys(query.WHERE).length === 0) {
-                    result1 = section;
-                } else {
-                    result1 = this.filterResult(query.WHERE, section);
+            let ckvalid = new CheckValid();
+            if (ckvalid.CheckValid(query, id)) {
+                let result1 = this.filterList(id, query, section);
+                if (query.TRANSFORMATIONS) {
+                    let result2 = this.transformList(query.TRANSFORMATIONS, result1);
+                    return Promise.resolve(this.orderedResult(query.OPTIONS, result2));
                 }
-                let result2 = this.orderedResult(query.OPTIONS, result1);
-                return Promise.resolve(result2);
+                return Promise.resolve(this.orderedResult(query.OPTIONS, result1));
+            } else {
+                return Promise.reject("Invalid query!");
             }
         } catch (e) {
             return Promise.reject(e);
         }
+    }
+
+    private filterList(id: string, query: any, section: any[]): any[] {
+        if (Object.keys(query.WHERE).length === 0) {
+            return section;
+        }
+        if (Object.keys(query.WHERE).length > 0) {
+            return this.filterResult(id, query.WHERE, section);
+        }
+    }
+
+    private transformList(query: any, section: any[]): any[] {
+            let transform = new Transformation();
+            return transform.transResult(query, section);
     }
 
     public static getstring(query: any): string {
@@ -41,27 +50,24 @@ export default class QueryBranch {
         if (!query.OPTIONS.COLUMNS[0].includes("_")) {
             throw new InsightError("Invalid query! There are no _ to show id and other keys");
         }
-        let id: string = query.OPTIONS.COLUMNS[0].split("_")[0];
-        if (id.includes("_")) {
+        let splitlist = query.OPTIONS.COLUMNS[0].split("_");
+        if (splitlist.length !== 2) {
             throw new InsightError("Invalid query! There are more than one _ in column items");
         }
-        if (id === "") {
-            throw new InsightError("Invalid id!");
-        }
+        let id =  query.OPTIONS.COLUMNS[0].split("_")[0];
         return id;
     }
 
-    // list all cases: AND,OR,EQ,LT....
-    private filterResult(Where: any, sections: any[]): any[] {
+    private filterResult(id: string, Where: any, sections: any[]): any[] {
         if (Where.AND || Where.OR) {
-            return this.LogicResult(Where, sections);
+            return this.LogicResult(id, Where, sections);
         }
         if (Where.LT || Where.EQ || Where.GT) {
             return this.MCResult(Where, sections);
         }
         if (Where.NOT) {
             if (Object.keys(Where.NOT).length === 1) {
-                let notresult = this.filterResult(Where.NOT, sections);
+                let notresult = this.filterResult(id, Where.NOT, sections);
                 return sections.filter(function (section) {
                     return !notresult.includes(section);
                 });
@@ -74,15 +80,21 @@ export default class QueryBranch {
         }
     }
 
-    // logic result
-    private LogicResult(LCquery: any, sections: any[]): any[] {
+    private LogicResult(id: string, LCquery: any, sections: any[]): any[] {
+        let identity: string;
+        if (id === "courses") {
+            identity = "courses_uuid";
+        }
+        if (id === "rooms") {
+            identity = "rooms_name";
+        }
         if (LCquery.OR) {
             let ORresult: any[] = [];
             let ORMap = new Map();
             for (let orquery of LCquery.OR) {
-                for (let orq of this.filterResult(orquery, sections)) {
-                    if (!ORMap.has(orq["courses_uuid"])) {
-                        ORMap.set(orq["courses_uuid"], orq);
+                for (let orq of this.filterResult(id, orquery, sections)) {
+                    if (!ORMap.has(orq[identity])) {
+                        ORMap.set(orq[identity], orq);
                         ORresult.push(orq);
                     }
                 }
@@ -93,18 +105,18 @@ export default class QueryBranch {
             let andresult: any = {};
             let uuidlist: any[] = [];
             if (LCquery.AND.length === 1) {
-                return this.filterResult(LCquery.AND[0], sections);
+                return this.filterResult(id, LCquery.AND[0], sections);
             }
-            for (let item0 of this.filterResult(LCquery.AND[0], sections)) {
-                uuidlist.push(item0["courses_uuid"]);
+            for (let item0 of this.filterResult(id, LCquery.AND[0], sections)) {
+                uuidlist.push(item0[identity]);
             }
             for (let i = 1; i < LCquery.AND.length; i++) {
                 andresult = {};
-                for (let item of this.filterResult(LCquery.AND[i], sections)) {
-                    if (!uuidlist.includes(item["courses_uuid"])) {
-                        uuidlist.push(item["courses_uuid"]);
+                for (let item of this.filterResult(id, LCquery.AND[i], sections)) {
+                    if (!uuidlist.includes(item[identity])) {
+                        uuidlist.push(item[identity]);
                     } else {
-                        andresult[item["courses_uuid"]] = item;
+                        andresult[item[identity]] = item;
                     }
                 }
                 uuidlist = Object.keys(andresult);
@@ -165,13 +177,12 @@ export default class QueryBranch {
             });
         }
     }
-// sort the result by column and order
+
     private orderedResult(OPTIONquery: any, sections: any[]): any[] {
         let Column: string[] = OPTIONquery.COLUMNS;
-        let Order: string = OPTIONquery.ORDER;
         let ColumnResult: any[] = [];
         if (sections.length > 5000) {
-            throw new ResultTooLargeError("The result is too large");
+            throw new ResultTooLargeError(" The reult is too large");
         }
         for (let section of sections) {
             let res: any = {};
@@ -180,19 +191,108 @@ export default class QueryBranch {
             }
             ColumnResult.push(res);
         }
-        if (Order == null) {
+        if (OPTIONquery.ORDER == null) {
             return ColumnResult;
         } else {
-            return ColumnResult.sort((sec1, sec2) => {
-                if (sec1[Order] > sec2[Order]) {
-                    return 1;
-                }
+            let Sort: any = OPTIONquery.ORDER;
+            if (typeof Sort === "string") {
+                return this.sortfoo("UP", Sort, ColumnResult);
+            } else {
+                return this.SortResult(Sort["dir"], Sort["keys"], ColumnResult);
+            }
+        }
+    }
 
-                if (sec1[Order] < sec2[Order]) {
+    private SortResult(order: string, keys: string[], sections: any[]): any[] {
+        if (keys.length === 1) {
+            return this.sortfoo(order, keys[0], sections);
+        }
+        let sorted: string[] = [];
+        return this.sortHelper(order, sorted, keys, sections);
+    }
+
+    private sortHelper(order: string, sorted: string[], keys: string[], unsort: any[]): any[] {
+        if (keys.length === 0) {
+            return unsort;
+        }
+        let key1s = keys.slice(1);
+        if (sorted.length === 0) {
+            let initsort = this.sortfoo(order, keys[0], unsort);
+            sorted.push(keys[0]);
+            return this.sortHelper(order, sorted, key1s, initsort);
+        }
+        let recsort = this.Sortrec(order, sorted, keys[0], unsort);
+        sorted.push(keys[0]);
+        return this.sortHelper(order, sorted, key1s, recsort);
+    }
+
+    private sortfoo(order: string, key: string, sections: any[]): any[] {
+        if (order === "DOWN") {
+            return sections.sort((sec1, sec2) => {
+                    if (sec2[key] > sec1[key]) {
+                        return 1;
+                    }
+                    if (sec2[key] < sec1[key]) {
+                        return -1;
+                    }
+                    return 0;
+            });
+        }
+        if (order === "UP") {
+            return sections.sort((sec1, sec2) => {
+                if (sec2[key] > sec1[key]) {
                     return -1;
+                }
+                if (sec2[key] < sec1[key]) {
+                    return 1;
                 }
                 return 0;
             });
         }
+
+    }
+
+    private Sortrec(order: string, sorteds: string[], unsort: string, sections: any[]): any[] {
+        if (order === "DOWN") {
+            return sections.sort((sec1, sec2) => {
+                for (let sorted of sorteds) {
+                    if (sec2[sorted] > sec1[sorted]) {
+                        return 1;
+                    }
+                    if (sec2[sorted] < sec1[sorted]) {
+                        return -1;
+                    }
+                }
+                if (sec2[unsort] > sec1[unsort]) {
+                        return 1;
+                    }
+                if (sec2[unsort] < sec1[unsort]) {
+                        return -1;
+                    } else {
+                    return 0;
+                }
+            });
+        }
+        if (order === "UP") {
+            return sections.sort((sec1, sec2) => {
+                for (let sorted of sorteds) {
+                    if (sec2[sorted] > sec1[sorted]) {
+                        return -1;
+                    }
+                    if (sec2[sorted] < sec1[sorted]) {
+                        return 1;
+                    }
+                }
+                if (sec2[unsort] > sec1[unsort]) {
+                    return -1;
+                }
+                if (sec2[unsort] < sec1[unsort]) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+        }
+
     }
 }
