@@ -1,11 +1,66 @@
 import {InsightError} from "./IInsightFacade";
+import CheckTrans from "./CheckTrans";
+import CheckOptions from "./CheckOptions";
 
 export default class CheckValid {
+    public mfield0 = ["avg", "pass", "fail", "audit", "year"];
+    public mfield1 = ["lat", "lon", "seats"];
+    public sfield0 = ["dept", "id", "instructor", "title", "uuid"];
+    public sfield1 = ["fullname", "shortname", "number", "name", "address", "type", "furniture", "href"];
+
     public CheckValid(query: any, id: string): boolean {
-        return (this.checkValidBody(query.WHERE, id) && this.checkValidOption(query.OPTIONS, id));
+        let checkoptions = new CheckOptions();
+        let elements: string[] = Object.keys(query);
+        if (elements.length < 2 || elements.length > 3) {
+            throw new InsightError("Invalid query formation!");
+        }
+        if (elements.length === 2) {
+            if (query.WHERE === undefined || query.OPTIONS === undefined) {
+                throw new InsightError("Invalid query formation!");
+            } else {
+                return this.checkValidBody(query.WHERE, id) && checkoptions.CheckValidOption(query.OPTIONS, id);
+            }
+        } else {
+            if (query.WHERE === undefined || query.OPTIONS === undefined) {
+                throw new InsightError("Invalid query formation!");
+            }
+            if (this.checkValidBody(query.WHERE, id) && checkoptions.CheckValidOption(query.OPTIONS, id)) {
+                if (query.TRANSFORMATIONS) {
+                    let checktrans = new CheckTrans();
+                    return checktrans.CheckTrans(query, id);
+                } else {
+                    throw new InsightError("Invalid query formation!");
+                }
+            } else {
+                return false;
+            }
+        }
+}
+
+    public givekeys(req: string, id: string): string[] {
+        if (id === "courses") {
+            if (req === "key") {
+                return this.mfield0.concat(this.sfield0);
+            }
+            if (req === "mkey") {
+                return this.mfield0;
+            } else if (req === "skey") {
+                return this.sfield0;
+            }
+        } else if (id === "rooms") {
+            if (req === "key") {
+                return this.mfield1.concat(this.sfield1);
+            }
+            if (req === "mkey") {
+                return this.mfield1;
+            } else if (req === "skey") {
+                return this.sfield1;
+            }
+        } else {
+            throw new InsightError("not the id defined");
+        }
     }
 
-    // check valid body
     private checkValidBody(query: any, id: string): boolean {
         if (Object.keys(query).length === 1) {
             if (query.AND || query.OR || query.NOT || query.GT || query.EQ || query.LT || query.IS) {
@@ -13,17 +68,15 @@ export default class CheckValid {
             } else {
                 throw new InsightError("Invalid query! There is nothing in the filter");
             }
-        } else
-        if (Object.keys(query).length === 0) {
+        } else if (Object.keys(query).length === 0) {
             return true;
         } else {
             throw new InsightError("Invalid filter in Where!");
         }
     }
 
-    // check all filter: logiccomp,mcomp,scomp,negation and the keys:mkey,skey
     private checkValidFilter(query: any, id: string): boolean {
-        if ( query == null || Object.keys(query).length === 0) {
+        if (query == null || Object.keys(query).length === 0) {
             throw new InsightError("Invalid! At least one filter is null.");
         }
         if (query.AND) {
@@ -36,7 +89,7 @@ export default class CheckValid {
             return this.MCcheck(query, id);
         }
         if (query.IS) {
-            return this.SCcheck(query, id) && this.IPstringcheck(query.IS);
+            return this.SCcheck(query, id) && this.wildcheck(query.IS);
         }
         if (query.NOT) {
             return this.checkValidFilter(query.NOT, id);
@@ -44,7 +97,8 @@ export default class CheckValid {
             throw new InsightError("Invalid query, filter in NOT is in wrong type");
         }
     }
-    private IPstringcheck(ISquery: any): boolean {
+
+    private wildcheck(ISquery: any): boolean {
         let wild: string = "*";
         let skey: string = Object.keys(ISquery)[0];
         if (typeof ISquery[skey] === "string") {
@@ -65,16 +119,14 @@ export default class CheckValid {
                             return true;
                         }
                     }
-                } else
-                if (value.startsWith(wild)) {
+                } else if (value.startsWith(wild)) {
                     let realvalue = value.substring(1, valuelen);
                     if (realvalue.includes(wild)) {
                         throw new InsightError("Invalid query for using wildcard in a wrong way!");
                     } else {
                         return true;
                     }
-                } else
-                if (value.endsWith(wild)) {
+                } else if (value.endsWith(wild)) {
                     let realvalue = value.substring(0, valuelen - 1);
                     if (realvalue.includes(wild)) {
                         throw new InsightError("Invalid query for using wildcard in a wrong way!");
@@ -92,6 +144,7 @@ export default class CheckValid {
         }
 
     }
+
     private LCcheckEach(LClist: any[], id: string): boolean {
         if (LClist.length >= 1) {
             for (let LC of LClist) {
@@ -160,17 +213,18 @@ export default class CheckValid {
     }
 
     private mKeycheck(mkey: string, id: string): boolean {
-        let mfield0 = ["avg", "pass", "fail", "audit", "year"];
+        let mfields = this.givekeys("mkey", id);
         if (!mkey.includes("_")) {
             throw new InsightError("Invalid query! The mkey is not a string with _!");
         }
-        let mkeyid = mkey.split("_")[0];
-        let mfield = mkey.split("_")[1];
-        if (mkeyid.includes("_") || mfield.includes("_")) {
+        let mkeylist = mkey.split("_");
+        if (mkeylist.length !== 2) {
             throw new InsightError("Invalid query! The mkey contains more than one _!");
         }
+        let mkeyid = mkey.split("_")[0];
+        let mfield = mkey.split("_")[1];
         if (mkeyid === id) {
-            if (mfield0.includes(mfield)) {
+            if (mfields.includes(mfield)) {
                 return true;
             } else {
                 throw new InsightError("Invalid mfield!");
@@ -181,7 +235,7 @@ export default class CheckValid {
     }
 
     private SCcheck(query: any, id: string): boolean {
-        let sfiled0: string[] = ["dept", "id", "instructor", "title", "uuid"];
+        let sfileds = this.givekeys("skey", id);
         if (Object.keys(query.IS).length === 1) {
             if (typeof Object.keys(query.IS)[0] !== "string") {
                 throw new InsightError("Invalid query! The skey is not a string!");
@@ -190,16 +244,17 @@ export default class CheckValid {
             if (!skey.includes("_")) {
                 throw new InsightError("Invalid query! The skey is not a string with _!");
             }
-            let skeyid: string = skey.split("_")[0];
-            let sfield: string = skey.split("_")[1];
-            if (skeyid.includes("_") || sfield.includes("_")) {
+            let skeylist = skey.split("_");
+            if (skeylist.length !== 2) {
                 throw new InsightError("Invalid query! The skey contains more than one _!");
             }
+            let skeyid: string = skey.split("_")[0];
+            let sfield: string = skey.split("_")[1];
             if (typeof query.IS[skey] !== "string") {
                 throw new InsightError("Invalid query! The inputstring is not a string!");
             }
             if (skeyid === id) {
-                if (sfiled0.includes(sfield)) {
+                if (sfileds.includes(sfield)) {
                     return true;
                 } else {
                     throw new InsightError("Invalid mfield!");
@@ -212,59 +267,5 @@ export default class CheckValid {
         }
     }
 
-    // check all Options: columns and ordered
-    private checkValidOption(query: any, id: string): boolean {
-        if (Object.keys(query).length < 1 || Object.keys(query).length > 2) {
-            throw new InsightError("Invalid Options!");
-        } else {
-            return this.checkColumns(query, id) && this.checkOrder(query);
-        }
-    }
 
-    private checkColumns(query: any, id: string): boolean {
-        for (let col of query.COLUMNS) {
-            if (typeof col !== "string") {
-                throw new InsightError("Invalid query! At least one item in Column is not string");
-            }
-            if (! col.includes("_")) {
-                throw new InsightError("Invalid query! The column is not a string with _!");
-            }
-            let col0 = col.split("_")[0];
-            let col1 = col.split("_")[1];
-            if (col0.includes("_") || col1.includes("_")) {
-                throw new InsightError("Invalid query! The column contains more than one _!");
-            }
-        }
-        let Column: string[] = query.COLUMNS;
-        let Key: string[] = ["dept", "id", "instructor", "title", "uuid", "avg", "pass", "fail", "audit", "year"];
-        if (Column.length >= 1) {
-            for (let co of Column) {
-                let coid = co.split("_")[0];
-                let cofield = co.split("_")[1];
-                if (coid !== id) {
-                    throw new InsightError("Invalid Column with invalid id");
-                }
-                if (!Key.includes(cofield)) {
-                    throw new InsightError("Invalid Column with invalid key");
-                }
-            }
-            return true;
-        } else {
-            throw new InsightError("Invalid length of Columns");
-        }
-    }
-
-    private checkOrder(query: any): boolean {
-        if (Object.keys(query).length === 2 && query.ORDER == null) {
-            throw new InsightError("Invalid keys in OPTIONS!");
-        }
-        if (Object.keys(query).length === 1 && query.ORDER == null) {
-            return true;
-        }
-        if (Object.keys(query.ORDER).length === 1 || query.COLUMNS.includes(query.ORDER)) {
-            return true;
-        } else {
-            throw new InsightError("Invalid Order that not in Columns");
-        }
-    }
 }

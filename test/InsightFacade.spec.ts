@@ -340,8 +340,10 @@ describe("InsightFacade PerformQuery", () => {
         describe("Dynamic InsightFacade PerformQuery tests", function () {
             for (const test of testQueries) {
                 it(`[${test.filename}] ${test.title}`, function (done) {
+                    // eslint-disable-next-line max-nested-callbacks
                     insightFacade.performQuery(test.query).then((result) => {
                         TestUtil.checkQueryResult(test, result, done);
+                        // eslint-disable-next-line max-nested-callbacks
                     }).catch((err) => {
                         TestUtil.checkQueryResult(test, err, done);
                     });
@@ -349,4 +351,12 @@ describe("InsightFacade PerformQuery", () => {
             }
         });
     });
+    // it(`test`, function (done) {
+    //     const testQueryJson = testQueries[5];
+    //     insightFacade.performQuery(testQueryJson.query).then((result: any[]) => {
+    //         TestUtil.checkQueryResult(testQueryJson, result, done);
+    //     }).catch((err) => {
+    //         TestUtil.checkQueryResult(testQueryJson, err, done);
+    //     });
+    // });
 });

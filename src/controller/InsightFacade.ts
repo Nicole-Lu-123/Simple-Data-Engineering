@@ -16,6 +16,7 @@ import QueryBranch from "./QueryBranch";
 let validFile: boolean;
 const fs = require("fs");
 let numRows: number = 0;
+
 export interface CourseSection {
     courses_dept: string;
     courses_id: string;
@@ -28,6 +29,7 @@ export interface CourseSection {
     courses_uuid: string;
     courses_year: number;
 }
+
 export interface DatasetHashMap {
     [key: string]: InsightDataset;
 }
@@ -38,6 +40,7 @@ export default class InsightFacade implements IInsightFacade {
     public dataSetsMap: Map<string, InsightDataset>; //  {("id", InsightDataset); ....}
     public dataSetsIDs: string[];   // { "" ; ""; "" }
     public querybranch: QueryBranch;
+
     constructor() {
         this.myDatasetMap = new Map<string, CourseSection[]>();
         this.dataSetsMap = new Map<string, InsightDataset>();
@@ -46,6 +49,7 @@ export default class InsightFacade implements IInsightFacade {
         Log.trace("InsightFacadeImpl::init()");
 
     }
+
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
         let self = this, finalSectionsArr: CourseSection[] = [];
         numRows = 0;
@@ -102,9 +106,9 @@ export default class InsightFacade implements IInsightFacade {
 
     public removeDataset(id: string): Promise<string> {
         let self = this;
-        return new Promise <string>(function (resolve, reject) {
+        return new Promise<string>(function (resolve, reject) {
             if (self.badDatasetID(id)) {
-                return reject (new InsightError("invalid id"));
+                return reject(new InsightError("invalid id"));
             } else {
                 if (self.dataSetsIDs.includes(id)) {
                     self.myDatasetMap.delete(id);
@@ -114,7 +118,7 @@ export default class InsightFacade implements IInsightFacade {
                     fs.unlink(path, (err: any) => {
                         Log.trace(err);
                         Log.trace("path is deleted");
-                        return resolve (id);
+                        return resolve(id);
                     });
                 } else {
                     return reject(new NotFoundError("there is no such id"));
@@ -123,7 +127,7 @@ export default class InsightFacade implements IInsightFacade {
         });
     }
 
-    public performQuery(query: any): Promise <any[]> {
+    public performQuery(query: any): Promise<any[]> {
         try {
             let id = QueryBranch.getstring(query);
             if (this.dataSetsIDs.includes(id)) {
@@ -134,7 +138,7 @@ export default class InsightFacade implements IInsightFacade {
                 this.myDatasetMap.set(id, jsonContent);
                 return this.querybranch.performQuery(query, this.myDatasetMap, id);
             } else {
-                return Promise.reject("Not Found error");
+                return Promise.reject("Not Found error ");
             }
         } catch (e) {
             return Promise.reject(e);
@@ -145,20 +149,22 @@ export default class InsightFacade implements IInsightFacade {
         let self = this;
         let tempDatasats: InsightDataset[] = [];
         return new Promise<InsightDataset[]>(function (resolve, reject) {
-            tempDatasats = Array.from( self.dataSetsMap.values());
-            return resolve (tempDatasats);
+            tempDatasats = Array.from(self.dataSetsMap.values());
+            return resolve(tempDatasats);
         });
     }
+
     // Helper functions
     //
     // 1 -check input DatasetID
-    public badDatasetID (id: string): boolean {
+    public badDatasetID(id: string): boolean {
         if (id === null || id === undefined || id === "" || id.includes("_") || id.includes(" ")) { // ??? type of
             return true;    // return true if the id is null or undefined
         } else {
             return false;
         }
     }
+
     // 2 -check input content
     public badContent(content: string): boolean {
         if (content === null || content === undefined) {
@@ -167,9 +173,10 @@ export default class InsightFacade implements IInsightFacade {
             return false;
         }
     }
+
     // 3 -check valid file under "courses" directory
     //   use helper 4 /check true if no subfolder, false then has sub_folder
-    public validCoursesFile (relativePath: string, file: JSZipObject): boolean {
+    public validCoursesFile(relativePath: string, file: JSZipObject): boolean {
         if ((relativePath.indexOf("courses/") === 0) && (relativePath.indexOf("courses/") !== -1) // "courses/" is root
             && (file.dir === false)) {  // "the tail of this file  is not a folder"
             if (this.countFolder(relativePath) === 1) {
@@ -179,11 +186,13 @@ export default class InsightFacade implements IInsightFacade {
             }
         }
     }
+
     // 4 - count folders(dir)
-    public  countFolder (relativePath: string): number {
+    public countFolder(relativePath: string): number {
         let count: number = (relativePath.match(/[/]/g) || []).length;
         return count;
     }
+
     // 5 - save the current jsonObj(file-course) to data structure.
     public makePreSavedSections(CourseJasonData: string, id: string): CourseSection[] {
         let currSections: any[] = [];
@@ -192,11 +201,11 @@ export default class InsightFacade implements IInsightFacade {
             // let validunstoredParsedCourseData: object = unstoredParsedCourseData.result[0]; // ???
             // if (unstoredParsedCourseData.result) {
             for (let oneSection of unstoredParsedCourseData.result) {
-                    if (this.validSection(oneSection)) {
-                        currSections.push(this.makeCorseSection(oneSection, id));
-                        numRows ++;
-                    }
+                if (this.validSection(oneSection)) {
+                    currSections.push(this.makeCorseSection(oneSection, id));
+                    numRows++;
                 }
+            }
             // }
         } catch (e) {
             Log.trace(e);
@@ -205,12 +214,13 @@ export default class InsightFacade implements IInsightFacade {
         }
         return currSections;
     }
+
     // 6 - check if the section is valid
     public validSection(section: any) {
         return ((typeof (section.Subject) !== "undefined") && (typeof (section.Course) !== "undefined") &&
             (typeof (section.Avg) !== "undefined") && (typeof (section.Professor) !== "undefined")
             && (typeof (section.Title) !== "undefined") && (typeof (section.Pass) !== "undefined")
-            && (typeof (section.Fail) !== "undefined") && (typeof (section.Audit)  !== "undefined")
+            && (typeof (section.Fail) !== "undefined") && (typeof (section.Audit) !== "undefined")
             && (typeof (section.id) !== "undefined") && (typeof (section.Year) !== "undefined"));
         // && (typeof (section.Subject) === "string" ) && (typeof (section.Course) === "string")
         // && (typeof (section.Avg) === "number") && (typeof (section.Professor) === "string")
@@ -218,6 +228,7 @@ export default class InsightFacade implements IInsightFacade {
         // && (typeof (section.Fail) === "number") && (typeof section.Audit === "number")
         // && (typeof (section.id) === "number") && (typeof section.Section === "number"));
     }
+
     // 7 - make a new course section
     public makeCorseSection(section: any, id: string): CourseSection {
         // let tempSection: CourseSection = {
@@ -251,16 +262,18 @@ export default class InsightFacade implements IInsightFacade {
         }
         return courseObject;
     }
+
     // 8
-    public setUUID (id: any) {
+    public setUUID(id: any) {
         return id.toString();
     }
+
     // 9 make new dataset
-    public  makeNewDataset (id: string, kind: InsightDatasetKind, length: number): InsightDataset {
+    public makeNewDataset(id: string, kind: InsightDatasetKind, length: number): InsightDataset {
         let newDataset = {
-            id : id,
-            kind : kind,
-            numRows : length,
+            id: id,
+            kind: kind,
+            numRows: length,
         };
         return newDataset;
     }
