@@ -1,0 +1,40 @@
+{
+    "title": "keys is not in COLUM",
+    "query": 
+{
+    "WHERE": {
+        "AND": [{
+            "IS": {
+                "rooms_furniture": "*Tables*"
+            }
+        }, {
+            "GT": {
+                "rooms_seats": 300
+            }
+        }]
+    },
+    "OPTIONS": {
+        "COLUMNS": [
+            "rooms_shortname",
+            "maxSeats"
+        ],
+        "ORDER": {
+            "dir": "DOWN",
+            "keys": ["avgSeats"]
+        }
+    },
+    "TRANSFORMATIONS": {
+        "GROUP": ["rooms_shortname"],
+        "APPLY": [{
+            "maxSeats": {
+                "MAX": "rooms_seats"
+            },
+             "avgSeats": {
+                "COUNT": "rooms_seats"
+            }
+        }]
+    }
+},
+    "isQueryValid": false,
+    "result": "InsightError"
+}

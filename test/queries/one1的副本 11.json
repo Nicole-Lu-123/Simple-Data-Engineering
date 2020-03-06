@@ -1,0 +1,33 @@
+{
+    "title": "there exist room and course in OPTION ",
+    "query": {
+    "WHERE": {
+        "AND": [{
+            "IS": {
+                "rooms_furniture": "*Tables*"
+            }
+        }, {
+            "GT": {
+                "rooms_seats": 300
+            }
+        }]
+    },
+    "OPTIONS": {
+        "COLUMNS": [
+            "course_title",
+            "maxSeats"
+            
+        ]
+    },
+    "TRANSFORMATIONS": {
+        "GROUP": ["course_title"],
+        "APPLY": [{
+            "minSeats": {
+                "MIN": "rooms_seats"
+            }
+        }]
+    }
+},
+    "isQueryValid": false,
+    "result": "InsightError"
+}

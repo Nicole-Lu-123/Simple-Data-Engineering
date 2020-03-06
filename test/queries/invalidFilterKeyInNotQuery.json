@@ -1,0 +1,19 @@
+{
+    "title": "Invalid filter key in not query",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "courses_year": 2005
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

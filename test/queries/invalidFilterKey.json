@@ -1,0 +1,20 @@
+{
+    "title": "400: Invalid filter key: COLUMNS",
+    "query": {
+        "OPTIONS": {
+            "ORDER": "courses_avg",
+            "GT": {
+                "courses_avg": 97
+            }
+        },
+        "WHERE": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ]
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}
+

@@ -1,0 +1,24 @@
+{
+    "title": "NOT with empty result--valid",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "NOT":{
+                    "EQ":{
+                        "courses_avg": 100
+                    }
+                }
+
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": []
+}

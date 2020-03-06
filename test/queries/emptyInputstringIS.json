@@ -1,0 +1,32 @@
+{
+    "title": "IS with empty inputstring--valid",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "IS": {
+                        "courses_dept":""
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept":" "
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_id",
+                "courses_avg",
+                "courses_audit",
+                "courses_uuid",
+                "courses_year"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": []
+}

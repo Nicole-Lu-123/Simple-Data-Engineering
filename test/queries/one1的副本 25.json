@@ -1,0 +1,38 @@
+{
+    "title": "applykey is an empty string",
+    "query": 
+{
+    "WHERE": {
+        "AND": [{
+            "IS": {
+                "rooms_furniture": "*Tables*"
+            }
+        }, {
+            "GT": {
+                "rooms_seats": 300
+            }
+        }]
+    },
+    "OPTIONS": {
+        "COLUMNS": [
+            "rooms_shortname",
+            ""
+        ],
+        "ORDER": {
+            "dir": "DOWN",
+            "keys": ["maxSeats"]
+        }
+    },
+    "TRANSFORMATIONS": {
+        "GROUP": ["rooms_shortname"],
+        "APPLY": [{
+            "": {
+                "MIN": "rooms_seats"
+            }
+        }]
+    }
+},
+    "isQueryValid": false,
+    "result": "InsightError"
+}
+

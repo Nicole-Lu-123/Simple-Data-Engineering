@@ -1,0 +1,32 @@
+{
+    "title": "SELECT dept, avg WHERE avg > 97 and avg <98",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                "GT": {
+                "courses_avg":97.6
+                }
+            },
+            {
+              "LT": {
+                "courses_avg":98
+            }
+            }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        { "courses_dept": "epse", "courses_avg": 97.67 },
+        { "courses_dept": "epse", "courses_avg": 97.69 },
+        { "courses_dept": "epse", "courses_avg": 97.78 }
+    ]
+}

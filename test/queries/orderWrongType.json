@@ -1,0 +1,29 @@
+{
+    "title": "wrong order type",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "GT": {
+                        "courses_avg": 81
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept": "adhe"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_fail",
+                "courses_year"
+            ],
+            "ORDER": 11
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}
+

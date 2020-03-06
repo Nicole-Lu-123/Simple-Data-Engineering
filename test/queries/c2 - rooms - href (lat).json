@@ -1,0 +1,63 @@
+{
+    "title": "c2 - rooms - href (ordered by lat)",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "rooms_furniture": "*Tables*"
+                    }
+                },
+                {
+                    "GT": {
+                        "rooms_seats": 300
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "rooms_href",
+                "minLat"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": [
+                    "minLat"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_href"
+            ],
+            "APPLY": [
+                {
+                    "minLat": {
+                        "MIN": "rooms_lat"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "rooms_href": "http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/HEBB-100",
+            "minLat": 49.2661
+        },
+        {
+            "rooms_href": "http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/LSC-1001",
+            "minLat": 49.26236
+        },
+        {
+            "rooms_href": "http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/LSC-1002",
+            "minLat": 49.26236
+        },
+        {
+            "rooms_href": "http://students.ubc.ca/campus/discover/buildings-and-classrooms/room/OSBO-A",
+            "minLat": 49.26047
+        }
+    ]
+}
+

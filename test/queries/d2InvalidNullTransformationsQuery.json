@@ -1,0 +1,29 @@
+{
+    "title": "d2 invalid null transformations query",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "courses_dept": "*ps*"
+                    }
+                },
+                {
+                    "GT": {
+                        "courses_avg": 95
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "maxAvg"
+            ],
+            "ORDER": "maxAvg"
+        },
+        "TRANSFORMATIONS": null
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

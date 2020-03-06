@@ -1,0 +1,37 @@
+{
+    "title": "keys in ORDER is NULL",
+    "query": 
+{
+    "WHERE": {
+        "AND": [{
+            "IS": {
+                "rooms_furniture": "*Tables*"
+            }
+        }, {
+            "GT": {
+                "rooms_seats": 300
+            }
+        }]
+    },
+    "OPTIONS": {
+        "COLUMNS": [
+            "rooms_shortname",
+            "maxSeats"
+        ],
+        "ORDER": {
+            "dir": null,
+            "keys": [null]
+        }
+    },
+    "TRANSFORMATIONS": {
+        "GROUP": ["rooms_shortname"],
+        "APPLY": [{
+            "maxSeats": {
+                "MAX": "rooms_seats"
+            }
+        }]
+    }
+},
+    "isQueryValid": false,
+    "result": "InsightError"
+}

@@ -1,0 +1,18 @@
+{
+    "title": "Invalid query references not added dataset",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "notAddedDataset_avg": 97
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "notAddedDataset_dept",
+                "notAddedDataset_avg"
+            ]
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

@@ -1,0 +1,186 @@
+{
+    "title": "Query for pass using all comparators",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_pass": 170
+                    }
+                },
+                {
+                    "AND": [
+                        {
+                            "GT": {
+                                "courses_pass": 2000
+                            }
+                        },
+                        {
+                            "LT": {
+                                "courses_pass": 2100
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_pass"
+            ],
+            "ORDER": "courses_pass"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "fist",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "apsc",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "frst",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "chbe",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "frst",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "chem",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "ling",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "chem",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "math",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "civl",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "math",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "civl",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "mech",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "comm",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "phys",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "comm",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "psyc",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "crwr",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "visa",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "bafi",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "visa",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "chem",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "cnps",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "civl",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "econ",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "comm",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "civl",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "chbe",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "cpsc",
+            "courses_pass": 170
+        },
+        {
+            "courses_dept": "eosc",
+            "courses_pass": 2015
+        },
+        {
+            "courses_dept": "eosc",
+            "courses_pass": 2016
+        },
+        {
+            "courses_dept": "econ",
+            "courses_pass": 2019
+        },
+        {
+            "courses_dept": "econ",
+            "courses_pass": 2023
+        },
+        {
+            "courses_dept": "econ",
+            "courses_pass": 2063
+        },
+        {
+            "courses_dept": "econ",
+            "courses_pass": 2083
+        },
+        {
+            "courses_dept": "psyc",
+            "courses_pass": 2095
+        },
+        {
+            "courses_dept": "econ",
+            "courses_pass": 2099
+        }
+    ]
+}

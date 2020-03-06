@@ -1,0 +1,25 @@
+{
+    "title": "there is not TRASFORMATION but there is a element whcih don not have underline in COLUMN ",
+    "query": {
+    "WHERE": {
+        "AND": [{
+            "IS": {
+                "rooms_furniture": "*Tables*"
+            }
+        }, {
+            "GT": {
+                "rooms_seats": 300
+            }
+        }]
+    },
+    "OPTIONS": {
+        "COLUMNS": [
+            "course_title",
+            "maxSeats"
+            
+        ]
+    }
+},
+    "isQueryValid": false,
+    "result": "InsightError"
+}
