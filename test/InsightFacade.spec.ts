@@ -350,12 +350,12 @@ describe("InsightFacade PerformQuery", () => {
             }
         });
     });
-    // it(`test`, function (done) {
-    //     const testQueryJson = testQueries[5];
-    //     insightFacade.performQuery(testQueryJson.query).then((result: any[]) => {
-    //         TestUtil.checkQueryResult(testQueryJson, result, done);
-    //     }).catch((err) => {
-    //         TestUtil.checkQueryResult(testQueryJson, err, done);
-    //     });
-    // });
+//     it(`test`, function (done) {
+//         const testQueryJson = testQueries[6];
+//         insightFacade.performQuery(testQueryJson.query).then((result: any[]) => {
+//             TestUtil.checkQueryResult(testQueryJson, result, done);
+//         }).catch((err) => {
+//             TestUtil.checkQueryResult(testQueryJson, err, done);
+//         });
+//     });
 });
