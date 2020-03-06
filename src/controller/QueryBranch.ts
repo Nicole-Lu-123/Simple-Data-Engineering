@@ -35,7 +35,7 @@ export default class QueryBranch {
     public static getstring(query: any): string {
         let checktrans = new CheckTrans();
         let checkoptions = new CheckOptions();
-        if (query === null) {
+        if (query == null) {
             throw new InsightError("Invalid query! One of WHERE and OPTIONS or both are null");
         } else if (query.TRANSFORMATIONS && query.TRANSFORMATIONS.GROUP) {
             if (checktrans.EasycheckGroup(query)) {

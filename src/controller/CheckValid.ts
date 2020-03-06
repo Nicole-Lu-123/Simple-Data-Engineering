@@ -1,6 +1,7 @@
 import {InsightError} from "./IInsightFacade";
 import CheckTrans from "./CheckTrans";
 import CheckOptions from "./CheckOptions";
+
 export default class CheckValid {
     public mfield0 = ["avg", "pass", "fail", "audit", "year"];
     public mfield1 = ["lat", "lon", "seats"];

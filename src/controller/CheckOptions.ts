@@ -1,5 +1,6 @@
 import {InsightError} from "./IInsightFacade";
 import CheckValid from "./CheckValid";
+
 export default class CheckOptions {
     public CheckValidOption(query: any, id: string, key: string): boolean {
         let options = query.OPTIONS;

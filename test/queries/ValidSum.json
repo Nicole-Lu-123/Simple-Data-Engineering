@@ -14,7 +14,7 @@
             "ORDER": {
                 "dir": "UP",
                 "keys": [
-                    "theAmonut"
+                    "theAmount"
                 ]
             }
         },

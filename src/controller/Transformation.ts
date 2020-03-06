@@ -1,4 +1,5 @@
 import {Decimal} from "decimal.js";
+
 export default class Transformation {
     private groupresult: any[];
 

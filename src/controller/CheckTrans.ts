@@ -1,6 +1,7 @@
 import {InsightError} from "./IInsightFacade";
 import CheckOptions from "./CheckOptions";
 import CheckValid from "./CheckValid";
+
 export default class CheckTrans {
     public checkoptions: CheckOptions;
 
