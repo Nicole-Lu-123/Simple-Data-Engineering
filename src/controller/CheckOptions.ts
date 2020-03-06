@@ -1,22 +1,30 @@
 import {InsightError} from "./IInsightFacade";
 import CheckValid from "./CheckValid";
 
-
 export default class CheckOptions {
     public CheckValidOption(query: any, id: string): boolean {
-        if (Object.keys(query).length === 1 || Object.keys(query).length === 2) {
+        if (Object.keys(query).length === 1) {
             if (query.COLUMNS) {
-                return this.checkColumns(query, id) && this.checkOrder(query);
+                return this.checkColumns(query, id);
             } else {
                 throw new InsightError(" Invalid Options with no Column!");
             }
+        } else if (Object.keys(query).length === 2) {
+            if (query.COLUMNS && query.ORDER && Object.keys(query)[0] === "COLUMNS") {
+                return this.checkColumns(query, id) && this.checkOrder(query);
+            } else {
+                throw new InsightError(" Invalid Options with no Column or first is not column!");
+            }
         } else {
-            throw new InsightError("Invalid Options!");
+            throw new InsightError(" Invalid Options with invalid length!");
         }
     }
 
     private checkColumns(query: any, id: string): boolean {
         let columns = query.COLUMNS;
+        if (columns === null || columns === undefined) {
+            throw new InsightError("Invalid query! Column is null");
+        }
         for (let col of columns) {
             if (typeof col !== "string") {
                 throw new InsightError("Invalid query! At least one item in Column is not string");
@@ -66,15 +74,11 @@ export default class CheckOptions {
     }
 
     private checkOrder(query: any): boolean {
-        if (Object.keys(query).length === 1) {
-            return true;
-        } else {
             if (query.ORDER == null) {
                 throw new InsightError("Invalid OPTIONS formation!");
             } else {
                 return this.checkOrderele(query);
             }
-        }
     }
 
     private checkOrderele(query: any): boolean {
@@ -87,7 +91,7 @@ export default class CheckOptions {
                 throw new InsightError("Invalid Order that not in column!");
             }
         } else if (typeof order === "object") {
-            if (order.dir && order.keys && Object.keys(order).length === 2) {
+            if (order.dir && order.keys && Object.keys(order).length === 2 && Object.keys(order)[0] === "dir") {
                 if (this.checkDirection(order.dir) && this.checkorderKeys(column, order.keys)) {
                     return true;
                 } else {
@@ -110,9 +114,12 @@ export default class CheckOptions {
     }
 
     private checkorderKeys(column: string[], keys: string[]): boolean {
+        if (keys.length < 1) {
+            throw new InsightError("Invalid! null orderkey");
+        }
         for (let key of keys) {
             if (!column.includes(key)) {
-                throw new InsightError("Invalid direction of Sort!");
+                throw new InsightError("Invalid key of Sort!");
             }
         }
         return true;

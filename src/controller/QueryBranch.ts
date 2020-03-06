@@ -1,12 +1,9 @@
 import {InsightError, ResultTooLargeError} from "./IInsightFacade";
 import CheckValid from "./CheckValid";
 import Transformation from "./Transformation";
-
-
 export default class QueryBranch {
-    public performQuery(query: any, datasets: any, id: string): Promise<any[]> {
+    public performQuery(query: any, section: any[], id: string): Promise<any[]> {
         try {
-            let section = datasets.get(id);
             let ckvalid = new CheckValid();
             if (ckvalid.CheckValid(query, id)) {
                 let result1 = this.filterList(id, query, section);
@@ -26,15 +23,14 @@ export default class QueryBranch {
     private filterList(id: string, query: any, section: any[]): any[] {
         if (Object.keys(query.WHERE).length === 0) {
             return section;
-        }
-        if (Object.keys(query.WHERE).length > 0) {
+        } else if (Object.keys(query.WHERE).length > 0) {
             return this.filterResult(id, query.WHERE, section);
         }
     }
 
     private transformList(query: any, section: any[]): any[] {
-            let transform = new Transformation();
-            return transform.transResult(query, section);
+        let transform = new Transformation();
+        return transform.transResult(query, section);
     }
 
     public static getstring(query: any): string {
@@ -44,28 +40,40 @@ export default class QueryBranch {
         if (query.OPTIONS.COLUMNS == null || query.OPTIONS.COLUMNS.length === 0) {
             throw new InsightError("Can't find a valid id in Invalid Query!");
         }
-        if (typeof query.OPTIONS.COLUMNS[0] !== "string") {
-            throw new InsightError("Invalid query! At least one item in Column is not string");
+        let column = query.OPTIONS.COLUMNS;
+        for (let col of column) {
+            if (typeof col === "string") {
+                if (col.includes("_") && col.split("_").length !== 2) {
+                    throw new InsightError("Invalid query! There are not keys in columns");
+                }
+                return col.split("_")[0];
+            } else {
+                throw new InsightError("Invalid query! Column is Not a string");
+            }
         }
-        if (!query.OPTIONS.COLUMNS[0].includes("_")) {
-            throw new InsightError("Invalid query! There are no _ to show id and other keys");
+        if (!query.TRANSFORMATIONS || !query.TRANSFORMATIONS.GROUP) {
+            throw new InsightError("Invalid query! Cant find the id in apply");
+        } else {
+            let group = query.TRANSFORMATIONS.GROUP;
+            if (group === null || Object.keys(group).length < 1) {
+                throw new InsightError("Invalid query! Cant find the id in invalid apply");
+            } else {
+                let key = group[0];
+                if (typeof key === "string" && key.includes("_") && key.split("_").length === 2) {
+                    return key.split("_")[0];
+                } else {
+                    throw new InsightError("Invalid query! There are not keys in columns");
+                }
+            }
         }
-        let splitlist = query.OPTIONS.COLUMNS[0].split("_");
-        if (splitlist.length !== 2) {
-            throw new InsightError("Invalid query! There are more than one _ in column items");
-        }
-        let id =  query.OPTIONS.COLUMNS[0].split("_")[0];
-        return id;
     }
 
     private filterResult(id: string, Where: any, sections: any[]): any[] {
         if (Where.AND || Where.OR) {
             return this.LogicResult(id, Where, sections);
-        }
-        if (Where.LT || Where.EQ || Where.GT) {
+        } else if (Where.LT || Where.EQ || Where.GT) {
             return this.MCResult(Where, sections);
-        }
-        if (Where.NOT) {
+        } else if (Where.NOT) {
             if (Object.keys(Where.NOT).length === 1) {
                 let notresult = this.filterResult(id, Where.NOT, sections);
                 return sections.filter(function (section) {
@@ -74,8 +82,7 @@ export default class QueryBranch {
             } else {
                 throw new InsightError("Invalid filter in NOT!");
             }
-        }
-        if (Where.IS) {
+        } else if (Where.IS) {
             return this.ISResult(Where.IS, sections);
         }
     }
@@ -133,15 +140,13 @@ export default class QueryBranch {
             return sections.filter((ele) => {
                 return ele[mkey] < val;
             });
-        }
-        if (MCquery.EQ) {
+        } else if (MCquery.EQ) {
             let mkey = Object.keys(MCquery.EQ)[0];
             let val = MCquery.EQ[mkey];
             return sections.filter((ele) => {
                 return ele[mkey] === val;
             });
-        }
-        if (MCquery.GT) {
+        } else if (MCquery.GT) {
             let mkey = Object.keys(MCquery.GT)[0];
             let val = MCquery.GT[mkey];
             return sections.filter((ele) => {
@@ -163,11 +168,9 @@ export default class QueryBranch {
                 let sectionValue = section[skey];
                 if (value.startsWith(wild) && value.endsWith(wild)) {
                     return sectionValue.includes(value.substring(1, valuelen - 1));
-                }
-                if (value.startsWith(wild)) {
+                } else if (value.startsWith(wild)) {
                     return sectionValue.endsWith(value.substring(1, valuelen));
-                }
-                if (value.endsWith(wild)) {
+                } else if (value.endsWith(wild)) {
                     return sectionValue.startsWith(value.substring(0, valuelen - 1));
                 }
             });
@@ -229,21 +232,19 @@ export default class QueryBranch {
     private sortfoo(order: string, key: string, sections: any[]): any[] {
         if (order === "DOWN") {
             return sections.sort((sec1, sec2) => {
-                    if (sec2[key] > sec1[key]) {
-                        return 1;
-                    }
-                    if (sec2[key] < sec1[key]) {
-                        return -1;
-                    }
-                    return 0;
+                if (sec2[key] > sec1[key]) {
+                    return 1;
+                } else if (sec2[key] < sec1[key]) {
+                    return -1;
+                }
+                return 0;
             });
         }
         if (order === "UP") {
             return sections.sort((sec1, sec2) => {
                 if (sec2[key] > sec1[key]) {
                     return -1;
-                }
-                if (sec2[key] < sec1[key]) {
+                } else if (sec2[key] < sec1[key]) {
                     return 1;
                 }
                 return 0;
@@ -258,17 +259,15 @@ export default class QueryBranch {
                 for (let sorted of sorteds) {
                     if (sec2[sorted] > sec1[sorted]) {
                         return 1;
-                    }
-                    if (sec2[sorted] < sec1[sorted]) {
+                    } else if (sec2[sorted] < sec1[sorted]) {
                         return -1;
                     }
                 }
                 if (sec2[unsort] > sec1[unsort]) {
-                        return 1;
-                    }
-                if (sec2[unsort] < sec1[unsort]) {
-                        return -1;
-                    } else {
+                    return 1;
+                } else if (sec2[unsort] < sec1[unsort]) {
+                    return -1;
+                } else {
                     return 0;
                 }
             });
@@ -278,21 +277,18 @@ export default class QueryBranch {
                 for (let sorted of sorteds) {
                     if (sec2[sorted] > sec1[sorted]) {
                         return -1;
-                    }
-                    if (sec2[sorted] < sec1[sorted]) {
+                    } else if (sec2[sorted] < sec1[sorted]) {
                         return 1;
                     }
                 }
                 if (sec2[unsort] > sec1[unsort]) {
                     return -1;
-                }
-                if (sec2[unsort] < sec1[unsort]) {
+                } else if (sec2[unsort] < sec1[unsort]) {
                     return 1;
                 } else {
                     return 0;
                 }
             });
         }
-
     }
 }

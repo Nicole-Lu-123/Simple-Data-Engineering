@@ -5,6 +5,7 @@ import CheckValid from "./CheckValid";
 
 export default class CheckTrans {
     public checkoptions: CheckOptions;
+
     constructor() {
         this.checkoptions = new CheckOptions();
     }
@@ -12,13 +13,37 @@ export default class CheckTrans {
     public CheckTrans(query: any, id: string): boolean {
         let trans = query.TRANSFORMATIONS;
         if (Object.keys(trans).length === 2) {
-            if (trans.GROUP && trans.APPLY) {
-                return (this.checkGroup(query, id) && this.checkApply(query, id));
+            if (trans.GROUP && trans.APPLY && Object.keys(trans)[0] === "GROUP") {
+                if (this.checkGroup(query, id) && this.checkApply(query, id)) {
+                return (this.checkColumnkeys(query));
             } else {
-                throw new InsightError("Invalid elements in Transformation");
+                throw new InsightError("Invalid! Not all elements in Transforamtion are valid");
             }
         } else {
             throw new InsightError("Invalid formation of Transformation!");
+        }
+    } else {
+            throw new InsightError("Invalid length of Transformation!");
+        }
+    }
+
+    private checkColumnkeys(query: any): boolean {
+        let column = query.OPTIONS.COLUMNS;
+        let group = query.TRANSFORMATIONS.GROUP;
+        let apply = query.TRANSFORMATIONS.APPLY;
+        if ( column.length <= group.length + apply.length) {
+            let applykey = [];
+            for (let applyele of apply) {
+                applykey.push(Object.keys(applyele)[0]);
+            }
+            for (let col of column) {
+                if (!group.includes(col) && !applykey.includes(col)) {
+                    throw new InsightError("Invalid! Not all elements in Transforamtion are valid");
+                }
+            }
+            return true;
+        } else {
+            throw new InsightError("Invalid! Not all column in either group or apply or vice versa");
         }
     }
 
@@ -31,9 +56,6 @@ export default class CheckTrans {
         for (let group of groups) {
             if (typeof group !== "string") {
                 throw new InsightError("Invalid type of key in group");
-            }
-            if (!column.includes(group)) {
-                throw new InsightError("Invalid keys in group which is not in column");
             }
             if (!this.checkoptions.checkKey(group, id)) {
                 throw new InsightError("Invalid keys in gr oup");
@@ -67,10 +89,6 @@ export default class CheckTrans {
     private checkApplyKey(applykey: any, query: any): boolean {
         if (typeof applykey !== "string" || !this.checkoptions.checkApplykey(applykey)) {
             throw new InsightError("Invalid Apply key");
-        }
-        let column = query.OPTIONS.COLUMNS;
-        if (!column.includes(applykey)) {
-            throw new InsightError("Invalid Applykey not in column");
         } else {
             return true;
         }
