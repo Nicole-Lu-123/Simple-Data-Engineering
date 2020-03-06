@@ -3,6 +3,7 @@ import CheckValid from "./CheckValid";
 import Transformation from "./Transformation";
 import CheckTrans from "./CheckTrans";
 import CheckOptions from "./CheckOptions";
+
 export default class QueryBranch {
     public performQuery(query: any, section: any[], id: string): Promise<any[]> {
         try {

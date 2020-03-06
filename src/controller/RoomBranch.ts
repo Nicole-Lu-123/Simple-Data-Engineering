@@ -8,7 +8,6 @@ import * as http from "http";
 import {rejects} from "assert";
 import {inspect} from "util";
 // import styles = module;
-
 const parse5 = require("parse5");
 const fs = require("fs");
 let numRows: number = 0;
