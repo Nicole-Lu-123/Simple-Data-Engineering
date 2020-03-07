@@ -1,0 +1,54 @@
+{
+    "title": "Query for avg using all comparators",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_avg": 98
+                    }
+                },
+                {
+                    "AND": [
+                        {
+                            "GT": {
+                                "courses_avg": 50
+                            }
+                        },
+                        {
+                            "LT": {
+                                "courses_avg": 51
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "math",
+            "courses_avg": 50.13
+        },
+        {
+            "courses_dept": "frst",
+            "courses_avg": 50.85
+        },
+        {
+            "courses_dept": "crwr",
+            "courses_avg": 98
+        },
+        {
+            "courses_dept": "crwr",
+            "courses_avg": 98
+        }
+    ]
+}

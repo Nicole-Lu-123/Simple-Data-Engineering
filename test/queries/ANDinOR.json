@@ -1,0 +1,58 @@
+{
+    "title": "AND in OR--valid",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "AND":[
+                        {
+                            "GT": {
+                                "courses_avg":90.5
+                            }
+                        },
+                        {
+                            "LT": {
+                                "courses_avg": 91
+                            }
+                        },
+                        {
+                            "IS": {
+                                "courses_dept":"adhe"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "AND":[
+                        {
+                            "EQ": {
+                                "courses_avg": 95
+                            }
+                        },
+                        {
+                            "IS": {
+                                "courses_dept":"bmeg"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_id",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        { "courses_dept": "adhe", "courses_id": "330", "courses_avg": 90.72 },
+        { "courses_dept": "adhe", "courses_id": "329", "courses_avg": 90.82 },
+        { "courses_dept": "adhe", "courses_id": "330", "courses_avg": 90.85 },
+        { "courses_dept": "bmeg", "courses_id": "597", "courses_avg": 95 },
+        { "courses_dept": "bmeg", "courses_id": "597", "courses_avg": 95 }
+    ]
+}

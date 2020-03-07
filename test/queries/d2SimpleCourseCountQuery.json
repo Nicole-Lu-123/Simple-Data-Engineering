@@ -1,0 +1,99 @@
+{
+    "title": "D2 simple course count query",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "courses_dept": "c*"
+                    }
+                },
+                {
+                    "GT": {
+                        "courses_avg": 90
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "countAvg"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": [
+                    "countAvg",
+                    "courses_dept"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_dept"
+            ],
+            "APPLY": [
+                {
+                    "countAvg": {
+                        "COUNT": "courses_avg"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "cnps",
+            "countAvg": 103
+        },
+        {
+            "courses_dept": "crwr",
+            "countAvg": 31
+        },
+        {
+            "courses_dept": "cpsc",
+            "countAvg": 22
+        },
+        {
+            "courses_dept": "civl",
+            "countAvg": 19
+        },
+        {
+            "courses_dept": "cell",
+            "countAvg": 17
+        },
+        {
+            "courses_dept": "chbe",
+            "countAvg": 15
+        },
+        {
+            "courses_dept": "chem",
+            "countAvg": 7
+        },
+        {
+            "courses_dept": "ceen",
+            "countAvg": 6
+        },
+        {
+            "courses_dept": "comm",
+            "countAvg": 4
+        },
+        {
+            "courses_dept": "chil",
+            "countAvg": 4
+        },
+        {
+            "courses_dept": "cons",
+            "countAvg": 3
+        },
+        {
+            "courses_dept": "cohr",
+            "countAvg": 1
+        },
+        {
+            "courses_dept": "ccst",
+            "countAvg": 1
+        }
+    ]
+}

@@ -1,0 +1,60 @@
+{
+    "title": "Simple instructor query",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_instructor": "agharebparast, farshid"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_instructor",
+                "courses_avg"
+            ],
+            "ORDER": "courses_instructor"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_avg": 74.07,
+            "courses_instructor": "agharebparast, farshid"
+        },
+        {
+            "courses_avg": 86.81,
+            "courses_instructor": "agharebparast, farshid"
+        },
+        {
+            "courses_avg": 82.17,
+            "courses_instructor": "agharebparast, farshid"
+        },
+        {
+            "courses_avg": 76.08,
+            "courses_instructor": "agharebparast, farshid"
+        },
+        {
+            "courses_avg": 76.34,
+            "courses_instructor": "agharebparast, farshid"
+        },
+        {
+            "courses_avg": 77.39,
+            "courses_instructor": "agharebparast, farshid"
+        },
+        {
+            "courses_avg": 74.36,
+            "courses_instructor": "agharebparast, farshid"
+        },
+        {
+            "courses_avg": 78.52,
+            "courses_instructor": "agharebparast, farshid"
+        },
+        {
+            "courses_avg": 80.86,
+            "courses_instructor": "agharebparast, farshid"
+        },
+        {
+            "courses_avg": 80.42,
+            "courses_instructor": "agharebparast, farshid"
+        }
+    ]
+}

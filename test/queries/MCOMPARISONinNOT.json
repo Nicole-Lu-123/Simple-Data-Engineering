@@ -1,0 +1,35 @@
+{
+    "title": "NOT with MCOMPARISON in--valid",
+    "query": {
+        "WHERE": {
+            "NOT": {
+                "OR": [
+                    {
+                        "GT": {
+                            "courses_avg": 98.58
+                        }
+                    },
+                    {
+                        "LT": {
+                            "courses_avg": 98.58
+                        }
+                    }
+                ]
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        { "courses_dept": "epse", "courses_avg": 98.58 },
+        { "courses_dept": "epse", "courses_avg": 98.58 },
+        { "courses_dept": "nurs", "courses_avg": 98.58 },
+        { "courses_dept": "nurs", "courses_avg": 98.58 }
+    ]
+}

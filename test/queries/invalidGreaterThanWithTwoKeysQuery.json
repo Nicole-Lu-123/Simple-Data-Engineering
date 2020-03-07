@@ -1,0 +1,20 @@
+{
+    "title": "Invalid query greater than with two keys",
+    "query": {
+        "WHERE": {
+            "GT": {
+                "courses_avg": 50,
+                "courses_id": 300
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

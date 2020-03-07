@@ -1,0 +1,36 @@
+{
+    "title": "LT/GT with empty result--valid",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "GT": {
+                        "courses_avg":100
+                    }
+                },
+                {
+                    "LT": {
+                        "courses_avg":0
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_id",
+                "courses_avg",
+                "courses_instructor",
+                "courses_title",
+                "courses_pass",
+                "courses_fail",
+                "courses_audit",
+                "courses_uuid",
+                "courses_year"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": true,
+    "result": []
+}

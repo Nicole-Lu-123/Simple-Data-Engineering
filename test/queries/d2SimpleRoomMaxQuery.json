@@ -1,0 +1,123 @@
+{
+    "title": "D2 simple room max query",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "rooms_furniture": "*Tables*"
+                    }
+                },
+                {
+                    "GT": {
+                        "rooms_seats": 80
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "maxSeats",
+                "rooms_shortname"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": [
+                    "maxSeats",
+                    "rooms_shortname"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_shortname"
+            ],
+            "APPLY": [
+                {
+                    "maxSeats": {
+                        "MAX": "rooms_seats"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "maxSeats": 442,
+            "rooms_shortname": "OSBO"
+        },
+        {
+            "maxSeats": 375,
+            "rooms_shortname": "HEBB"
+        },
+        {
+            "maxSeats": 350,
+            "rooms_shortname": "LSC"
+        },
+        {
+            "maxSeats": 299,
+            "rooms_shortname": "SRC"
+        },
+        {
+            "maxSeats": 260,
+            "rooms_shortname": "ANGU"
+        },
+        {
+            "maxSeats": 236,
+            "rooms_shortname": "PHRM"
+        },
+        {
+            "maxSeats": 205,
+            "rooms_shortname": "LSK"
+        },
+        {
+            "maxSeats": 200,
+            "rooms_shortname": "CHBE"
+        },
+        {
+            "maxSeats": 190,
+            "rooms_shortname": "SWNG"
+        },
+        {
+            "maxSeats": 160,
+            "rooms_shortname": "FRDM"
+        },
+        {
+            "maxSeats": 160,
+            "rooms_shortname": "DMP"
+        },
+        {
+            "maxSeats": 154,
+            "rooms_shortname": "IBLC"
+        },
+        {
+            "maxSeats": 136,
+            "rooms_shortname": "MCLD"
+        },
+        {
+            "maxSeats": 120,
+            "rooms_shortname": "WOOD"
+        },
+        {
+            "maxSeats": 108,
+            "rooms_shortname": "BUCH"
+        },
+        {
+            "maxSeats": 100,
+            "rooms_shortname": "IONA"
+        },
+        {
+            "maxSeats": 100,
+            "rooms_shortname": "GEOG"
+        },
+        {
+            "maxSeats": 100,
+            "rooms_shortname": "CEME"
+        },
+        {
+            "maxSeats": 94,
+            "rooms_shortname": "ALRD"
+        }
+    ]
+}

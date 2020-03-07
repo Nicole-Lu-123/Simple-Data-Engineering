@@ -192,7 +192,7 @@ export default class RoomBranch {
                     }
                     if (self.checkVluefield(aBlock,
                         "views-field views-field-field-room-capacity")) {
-                        roomObject[id + "_seats"] = aBlock.childNodes[0].value.trim();
+                        roomObject[id + "_seats"] = parseInt(aBlock.childNodes[0].value, 10);
                     }
                     if (self.checkVluefield(aBlock,
                         "views-field views-field-field-room-type")) {

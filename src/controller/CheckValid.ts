@@ -25,11 +25,19 @@ export default class CheckValid {
                 throw new InsightError("Invalid query formation3!");
             }
             if (query.TRANSFORMATIONS) {
-                if (this.checkValidBody(query.WHERE, id) && checkoptions.CheckValidOption(query, id, "ANYKEY")) {
-                    let checktrans = new CheckTrans();
-                    return checktrans.CheckTrans(query, id);
+                let checktrans = new CheckTrans();
+                if (Array.isArray(query.TRANSFORMATIONS.APPLY)) {
+                    if (query.TRANSFORMATIONS.APPLY.length === 0) {
+                        return (this.checkValidBody(query.WHERE, id) &&
+                            checkoptions.CheckValidOption(query, id, "KEY") &&
+                            checktrans.CheckTrans(query, id));
+                    } else {
+                        return (this.checkValidBody(query.WHERE, id) &&
+                            checkoptions.CheckValidOption(query, id, "ANYKEY") &&
+                            checktrans.CheckTrans(query, id));
+                    }
                 } else {
-                    throw new InsightError("Invalid query body or Options");
+                    throw new InsightError("Invalid Apply formation");
                 }
             } else {
                 throw new InsightError("Invalid query formation4!");
@@ -80,7 +88,7 @@ export default class CheckValid {
             throw new InsightError("Invalid! At least one filter is null.");
         }
         if (query.AND) {
-            if (!Array.isArray(query.AND) || query.AND === null) {
+            if (!Array.isArray(query.AND) || query.AND == null) {
                 throw new InsightError("Invalid query, filter in And is in wrong type");
             } else {
                 return this.LCcheckEach(query.AND, id);

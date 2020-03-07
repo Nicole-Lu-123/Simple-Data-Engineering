@@ -1,0 +1,126 @@
+{
+    "title": "Query for audit using all comparators",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_audit": 8
+                    }
+                },
+                {
+                    "AND": [
+                        {
+                            "GT": {
+                                "courses_audit": 8
+                            }
+                        },
+                        {
+                            "LT": {
+                                "courses_audit": 10
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_audit"
+            ],
+            "ORDER": "courses_audit"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_audit": 8,
+            "courses_dept": "epse"
+        },
+        {
+            "courses_audit": 8,
+            "courses_dept": "rhsc"
+        },
+        {
+            "courses_audit": 8,
+            "courses_dept": "rhsc"
+        },
+        {
+            "courses_audit": 8,
+            "courses_dept": "micb"
+        },
+        {
+            "courses_audit": 8,
+            "courses_dept": "germ"
+        },
+        {
+            "courses_audit": 8,
+            "courses_dept": "germ"
+        },
+        {
+            "courses_audit": 8,
+            "courses_dept": "frst"
+        },
+        {
+            "courses_audit": 8,
+            "courses_dept": "epse"
+        },
+        {
+            "courses_audit": 8,
+            "courses_dept": "comm"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "chbe"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "epse"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "rhsc"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "aanb"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "rhsc"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "rhsc"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "rhsc"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "epse"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "aanb"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "cons"
+        },
+        {
+            "courses_audit": 9,
+            "courses_dept": "cnto"
+        }
+    ]
+}

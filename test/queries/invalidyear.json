@@ -1,0 +1,29 @@
+{
+    "title": "MCOMPARISON with invalid input year--invalid",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "EQ": {
+                        "courses_year": "94"
+                    }
+                },
+                {
+                    "GT": {
+                        "courses_audit": "94"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_id",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

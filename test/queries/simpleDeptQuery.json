@@ -1,0 +1,452 @@
+{
+    "title": "Simple dept query",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_dept": "relg"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_dept"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_avg": 80.23,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 79.76,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 80.59,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.28,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 80.59,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.5,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 74.81,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.2,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 73.6,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 75,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 74.3,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 74.02,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.27,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.88,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.27,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.76,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.71,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.89,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.71,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.23,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 77.13,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 73.26,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 77.13,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 79.66,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 80.36,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.45,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 80.36,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 69.88,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.24,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 74.17,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.24,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 74.6,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 75.08,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.92,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 75.08,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 72.71,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 82.22,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.33,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 82.22,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 81.06,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.17,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 75.67,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.17,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 70.63,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.28,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 71.35,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.28,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 77.55,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 77.63,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 65.38,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 77.63,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 69.56,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 75.48,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 67.86,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 75.48,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 81.1,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 69.71,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.28,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 69.71,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.2,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.71,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 74.02,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.71,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.76,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 80.17,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.23,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 80.17,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 79.66,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.59,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 69.88,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.59,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 74.6,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 77.63,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 72.71,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 77.63,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 81.06,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.05,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 72.77,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.05,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 65.38,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.22,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 67.86,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.22,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 80.23,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 81.52,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 75,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 81.52,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.89,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 82.59,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.45,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 82.59,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.92,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 77.7,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 75.67,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 77.7,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 69.56,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.47,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.5,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 73.26,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 79.76,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 84.6,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 84.6,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.47,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 74.17,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 76.88,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 81.1,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 77.55,
+            "courses_dept": "relg"
+        },
+        {
+            "courses_avg": 78.33,
+            "courses_dept": "relg"
+        }
+    ]
+}

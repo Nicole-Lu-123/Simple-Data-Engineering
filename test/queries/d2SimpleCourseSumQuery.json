@@ -1,0 +1,99 @@
+{
+    "title": "D2 simple course sum query",
+    "query": {
+        "WHERE": {
+            "AND": [
+                {
+                    "IS": {
+                        "courses_dept": "c*"
+                    }
+                },
+                {
+                    "GT": {
+                        "courses_avg": 90
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "sumAvg"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": [
+                    "sumAvg",
+                    "courses_dept"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "courses_dept"
+            ],
+            "APPLY": [
+                {
+                    "sumAvg": {
+                        "SUM": "courses_avg"
+                    }
+                }
+            ]
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "cnps",
+            "sumAvg": 16952.66
+        },
+        {
+            "courses_dept": "crwr",
+            "sumAvg": 5540.25
+        },
+        {
+            "courses_dept": "cpsc",
+            "sumAvg": 4047.95
+        },
+        {
+            "courses_dept": "cell",
+            "sumAvg": 3489.38
+        },
+        {
+            "courses_dept": "civl",
+            "sumAvg": 3375.7
+        },
+        {
+            "courses_dept": "chbe",
+            "sumAvg": 2846.35
+        },
+        {
+            "courses_dept": "chem",
+            "sumAvg": 1279.48
+        },
+        {
+            "courses_dept": "chil",
+            "sumAvg": 823.17
+        },
+        {
+            "courses_dept": "comm",
+            "sumAvg": 752.52
+        },
+        {
+            "courses_dept": "ceen",
+            "sumAvg": 644.69
+        },
+        {
+            "courses_dept": "cons",
+            "sumAvg": 541.4
+        },
+        {
+            "courses_dept": "ccst",
+            "sumAvg": 187.34
+        },
+        {
+            "courses_dept": "cohr",
+            "sumAvg": 180.92
+        }
+    ]
+}

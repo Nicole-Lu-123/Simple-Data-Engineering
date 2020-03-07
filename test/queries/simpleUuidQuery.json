@@ -1,0 +1,24 @@
+{
+    "title": "Simple uuid query",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "courses_uuid": "70099"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_uuid",
+                "courses_avg"
+            ],
+            "ORDER": "courses_uuid"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_uuid": "70099",
+            "courses_avg": 62.95
+        }
+    ]
+}

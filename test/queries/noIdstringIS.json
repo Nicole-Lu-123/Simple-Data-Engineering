@@ -1,0 +1,20 @@
+{
+    "title": "IS with no idstring--invalid",
+    "query": {
+        "WHERE": {
+            "IS": {
+                "_id":"340"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_id",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

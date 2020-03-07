@@ -1,0 +1,28 @@
+{
+    "title": "ORDER with not-known keys--invalid",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "GT": {
+                        "courses_avg": 98
+                    }
+                },
+                {
+                    "EQ": {
+                        "courses_avg":98
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "hello"
+        }
+    },
+    "isQueryValid": false,
+    "result": "InsightError"
+}

@@ -1,0 +1,132 @@
+{
+    "title": "Query sort by id",
+    "query": {
+        "WHERE": {
+            "OR": [
+                {
+                    "GT": {
+                        "courses_avg": 98
+                    }
+                },
+                {
+                    "LT": {
+                        "courses_avg": 30
+                    }
+                },
+                {
+                    "EQ": {
+                        "courses_audit": 20
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_id"
+            ],
+            "ORDER": "courses_id"
+        }
+    },
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_id": "100"
+        },
+        {
+            "courses_id": "100"
+        },
+        {
+            "courses_id": "202"
+        },
+        {
+            "courses_id": "300"
+        },
+        {
+            "courses_id": "300"
+        },
+        {
+            "courses_id": "330"
+        },
+        {
+            "courses_id": "330"
+        },
+        {
+            "courses_id": "362"
+        },
+        {
+            "courses_id": "421"
+        },
+        {
+            "courses_id": "421"
+        },
+        {
+            "courses_id": "421"
+        },
+        {
+            "courses_id": "449"
+        },
+        {
+            "courses_id": "449"
+        },
+        {
+            "courses_id": "449"
+        },
+        {
+            "courses_id": "449"
+        },
+        {
+            "courses_id": "449"
+        },
+        {
+            "courses_id": "475"
+        },
+        {
+            "courses_id": "507"
+        },
+        {
+            "courses_id": "509"
+        },
+        {
+            "courses_id": "509"
+        },
+        {
+            "courses_id": "509"
+        },
+        {
+            "courses_id": "509"
+        },
+        {
+            "courses_id": "519"
+        },
+        {
+            "courses_id": "519"
+        },
+        {
+            "courses_id": "527"
+        },
+        {
+            "courses_id": "527"
+        },
+        {
+            "courses_id": "541"
+        },
+        {
+            "courses_id": "541"
+        },
+        {
+            "courses_id": "574"
+        },
+        {
+            "courses_id": "578"
+        },
+        {
+            "courses_id": "578"
+        },
+        {
+            "courses_id": "578"
+        },
+        {
+            "courses_id": "578"
+        }
+    ]
+}
