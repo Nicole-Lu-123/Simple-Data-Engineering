@@ -35,7 +35,7 @@ export default class CheckOptions {
                 throw new InsightError("Invalid query Column, no trans but not all keys");
             }
         } else if (key === "ANYKEY") {
-            if (!Array.isArray(columns) || columns === null || columns.length < 1) {
+            if (!Array.isArray(columns) || columns == null || columns.length < 1) {
                 throw new InsightError("Invalid type of key in column");
             }
             for (let col of columns) {
@@ -51,7 +51,7 @@ export default class CheckOptions {
 
     public EasycheckColumnsKEYONLY(query: any): boolean {
         let columns = query.OPTIONS.COLUMNS;
-        if (!Array.isArray(columns) || columns === null || columns.length < 1) {
+        if (!Array.isArray(columns) || columns == null || columns.length < 1) {
             throw new InsightError("Invalid column tyep or Column is null");
         }
         for (let column of columns) {
@@ -145,7 +145,7 @@ export default class CheckOptions {
     }
 
     private checkorderKeys(column: string[], keys: any[]): boolean {
-        if (!Array.isArray(keys) || keys === null || keys.length < 1) {
+        if (!Array.isArray(keys) || keys == null || keys.length < 1) {
             throw new InsightError("Invalid! null orderkey");
         }
         for (let key of keys) {

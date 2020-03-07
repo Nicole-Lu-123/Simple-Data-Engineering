@@ -62,14 +62,16 @@ export default class CheckTrans {
 
     public EasycheckGroup(query: any): boolean {
         let groups = query.TRANSFORMATIONS.GROUP;
-        if (!Array.isArray(groups) || groups === null || groups.length < 1) {
+        if (!Array.isArray(groups) || groups == null || groups.length < 1) {
             throw new InsightError("Invalid group type or with no element in");
         }
         for (let group of groups) {
             if (typeof group !== "string" || !group.includes("_") || group.split("_").length !== 2) {
                 throw new InsightError("Invalid type of key in group");
-            } else if (group.split("_")[0] === null && group.split("_")[1] === null) {
+            } else if (group.split("_")[0] == null && group.split("_")[1] == null) {
                 throw new InsightError("Invalid keys in group");
+            } else if (group.split("_")[0] === "" && group.split("_")[1] === "") {
+                throw new InsightError("Invalid keys in group2");
             }
         }
         return true;
@@ -92,7 +94,7 @@ export default class CheckTrans {
                 }
                 let applykey = Object.keys(applyrule)[0];
                 let applyobj = applyrule[applykey];
-                if (applykey === null || applyobj === null) {
+                if (applykey == null || applyobj == null) {
                     throw new InsightError("Invalid Applyrule formation, null applykeys");
                 }
                 if (!this.checkApplyKey(applykey, query) || !this.checkApplyToken(applyobj, id)) {
