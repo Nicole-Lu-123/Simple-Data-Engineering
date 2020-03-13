@@ -1,0 +1,11 @@
+document.getElementById(String id)
+Returns an object reference to the identified element.
+
+Document.getElementsByClassName()
+Returns a list of elements with the given class name.
+
+Document.getElementsByTagName()
+Returns a list of elements with the given tag name.
+
+Document.getElementsByTagNameNS()
+Returns a list of elements with the given tag name and namespace.

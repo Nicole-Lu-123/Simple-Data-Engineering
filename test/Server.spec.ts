@@ -1,5 +1,4 @@
 import Server from "../src/rest/Server";
-
 import InsightFacade from "../src/controller/InsightFacade";
 import chai = require("chai");
 import chaiHttp = require("chai-http");

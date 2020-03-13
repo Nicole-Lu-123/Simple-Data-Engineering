@@ -147,7 +147,7 @@ export default class InsightFacade implements IInsightFacade {
                 let section = this.myDatasetMap.get(id);
                 return this.querybranch.performQuery(query, section, id);
             } else {
-                return Promise.reject("Not Found error");
+                return Promise.reject(new NotFoundError("Not found the dataset"));
             }
         } catch (e) {
             return Promise.reject(e);

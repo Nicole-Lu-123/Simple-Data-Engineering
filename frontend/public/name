@@ -1,0 +1,108 @@
+function(e, t, n) {
+    e.exports = {
+        operators: {
+            conditions: [{
+                key: "EQ",
+                label: "EQ"
+            }, {
+                key: "GT",
+                label: "GT"
+            }, {
+                key: "IS",
+                label: "IS"
+            }, {
+                key: "LT",
+                label: "LT"
+            }],
+            transformations: [{
+                key: "COUNT",
+                label: "COUNT"
+            }, {
+                key: "AVG",
+                label: "AVG"
+            }, {
+                key: "MAX",
+                label: "MAX"
+            }, {
+                key: "MIN",
+                label: "MIN"
+            }, {
+                key: "SUM",
+                label: "SUM"
+            }]
+        },
+        types: {
+            courses: {
+                label: "Courses",
+                id: "courses",
+                fields: [{
+                    key: "audit",
+                    label: "Audit"
+                }, {
+                    key: "avg",
+                    label: "Average"
+                }, {
+                    key: "dept",
+                    label: "Department"
+                }, {
+                    key: "fail",
+                    label: "Fail"
+                }, {
+                    key: "id",
+                    label: "ID"
+                }, {
+                    key: "instructor",
+                    label: "Instructor"
+                }, {
+                    key: "pass",
+                    label: "Pass"
+                }, {
+                    key: "title",
+                    label: "Title"
+                }, {
+                    key: "uuid",
+                    label: "UUID"
+                }, {
+                    key: "year",
+                    label: "Year"
+                }]
+            },
+            rooms: {
+                label: "Rooms",
+                id: "rooms",
+                fields: [{
+                    key: "address",
+                    label: "Address"
+                }, {
+                    key: "fullname",
+                    label: "Full Name"
+                }, {
+                    key: "furniture",
+                    label: "Furniture"
+                }, {
+                    key: "href",
+                    label: "Link"
+                }, {
+                    key: "lat",
+                    label: "Latitude"
+                }, {
+                    key: "lon",
+                    label: "Longitude"
+                }, {
+                    key: "name",
+                    label: "Name"
+                }, {
+                    key: "number",
+                    label: "Number"
+                }, {
+                    key: "seats",
+                    label: "Seats"
+                }, {
+                    key: "shortname",
+                    label: "Short Name"
+                }, {
+                    key: "type",
+                    label: "Type"
+                }]
+            }
+        }
